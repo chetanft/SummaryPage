@@ -1,0 +1,73 @@
+.kpi-card {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.kpi-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.kpi-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.kpi-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.kpi-values {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.current-value, .target-value, .trend {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.current-value span, .target-value span {
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.current-value strong, .target-value strong {
+  font-size: 1.5rem;
+}
+
+.trend-icon {
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+.kpi-chart {
+  flex: 1;
+  min-height: 150px;
+  margin-top: 1rem;
+}
+
+/* Tile size classes */
+.tile-2x2 {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+.tile-2x1 {
+  grid-column: span 2;
+  grid-row: span 1;
+}
+
+.tile-1x2 {
+  grid-column: span 1;
+  grid-row: span 2;
+}

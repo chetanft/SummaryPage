@@ -1,0 +1,9 @@
+{
+  "short_name": "Summary Page",
+  "name": "Summary Page Prototype for Freight Tiger",
+  "icons": [],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
