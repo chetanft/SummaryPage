@@ -40,11 +40,32 @@ export const isDependentOn = (dependentId, parentId) => {
   return false;
 };
 
-// Helper function to generate random data points
-const generateDataPoints = (count, min, max) => {
-  return Array.from({ length: count }, () =>
-    Math.floor(Math.random() * (max - min + 1)) + min
-  );
+// Helper function to generate realistic data points with a trend
+const generateDataPoints = (count, min, max, trend = 'up', volatility = 0.2) => {
+  // Start with a value in the middle of the range
+  let currentValue = (min + max) / 2;
+
+  return Array.from({ length: count }, (_, index) => {
+    // Add some randomness
+    const randomFactor = (Math.random() * 2 - 1) * volatility;
+
+    // Apply trend (up, down, or flat)
+    let trendFactor = 0;
+    if (trend === 'up') {
+      trendFactor = (index / count) * (max - min) * 0.5; // Gradual increase
+    } else if (trend === 'down') {
+      trendFactor = -((index / count) * (max - min) * 0.5); // Gradual decrease
+    }
+
+    // Update current value
+    currentValue = currentValue + trendFactor + randomFactor;
+
+    // Ensure value stays within range
+    currentValue = Math.max(min, Math.min(max, currentValue));
+
+    // Return rounded value for integer data
+    return Math.round(currentValue * 10) / 10;
+  });
 };
 
 // Helper function to generate months for x-axis labels
@@ -53,14 +74,16 @@ const generateMonths = (count) => {
   return months.slice(0, count);
 };
 
-// Common chart colors
+// Common chart colors using Freight Tiger brand colors
 const chartColors = {
-  primary: 'rgba(54, 162, 235, 0.8)',
-  secondary: 'rgba(255, 99, 132, 0.8)',
-  tertiary: 'rgba(75, 192, 192, 0.8)',
-  quaternary: 'rgba(255, 159, 64, 0.8)',
-  quinary: 'rgba(153, 102, 255, 0.8)',
-  background: 'rgba(54, 162, 235, 0.1)'
+  primary: '#003c9b', // Freight Tiger Blue
+  secondary: '#04bc15', // Freight Tiger Green
+  tertiary: '#ffbe07', // Freight Tiger Yellow
+  quaternary: '#ff4d4f', // Custom red
+  quinary: '#8b5cf6', // Purple for additional data
+  background: 'rgba(0, 60, 155, 0.1)', // Blue with low opacity
+  greenBackground: 'rgba(4, 188, 21, 0.1)', // Green with low opacity
+  yellowBackground: 'rgba(255, 190, 7, 0.1)' // Yellow with low opacity
 };
 
 // KPI definitions for all personas with tile sizes and importance
@@ -72,8 +95,8 @@ const kpiDefinitions = {
     {
       id: 'revenueProfitTrends',
       name: 'Revenue & Profit Trends',
-      value: '₹ 12.5 Cr',
-      target: '₹ 15 Cr',
+      value: '₹ 142.8 Cr',
+      target: '₹ 150 Cr',
       trend: 'up',
       status: 'warning',
       persona: 'cxo',
@@ -84,16 +107,16 @@ const kpiDefinitions = {
         datasets: [
           {
             label: 'Revenue',
-            data: generateDataPoints(6, 8, 13),
+            data: generateDataPoints(6, 120, 150, 'up', 0.1),
             borderColor: chartColors.primary,
             backgroundColor: chartColors.background,
             tension: 0.4,
           },
           {
             label: 'Profit',
-            data: generateDataPoints(6, 2, 5),
+            data: generateDataPoints(6, 18, 25, 'up', 0.15),
             borderColor: chartColors.secondary,
-            backgroundColor: 'rgba(255, 99, 132, 0.1)',
+            backgroundColor: chartColors.greenBackground,
             tension: 0.4,
           }
         ],
@@ -112,6 +135,8 @@ const kpiDefinitions = {
       target: '3.5 days',
       trend: 'down',
       status: 'warning',
+      lowerIsBetter: true,
+      persona: 'cxo',
       chartType: 'line',
       tileSize: '2x1', // Medium horizontal tile
       chartData: {
@@ -119,7 +144,7 @@ const kpiDefinitions = {
         datasets: [
           {
             label: 'OTD Time',
-            data: generateDataPoints(6, 3.8, 4.5),
+            data: generateDataPoints(6, 3.8, 4.5, 'down', 0.1),
             borderColor: chartColors.primary,
             backgroundColor: chartColors.background,
             tension: 0.4,
@@ -127,7 +152,7 @@ const kpiDefinitions = {
           {
             label: 'Target',
             data: Array(6).fill(3.5),
-            borderColor: chartColors.secondary,
+            borderColor: chartColors.tertiary,
             borderDash: [5, 5],
             fill: false,
             pointRadius: 0,
@@ -144,10 +169,12 @@ const kpiDefinitions = {
     {
       id: 'freightCost',
       name: 'Freight Cost per KM/Tonnage',
-      value: '₹ 45/km',
+      value: '₹ 45.2/km',
       target: '₹ 40/km',
       trend: 'down',
       status: 'warning',
+      lowerIsBetter: true,
+      persona: 'cxo',
       chartType: 'line',
       tileSize: '2x1', // Medium horizontal tile
       chartData: {
@@ -155,16 +182,16 @@ const kpiDefinitions = {
         datasets: [
           {
             label: 'Cost per KM',
-            data: generateDataPoints(6, 42, 48),
+            data: generateDataPoints(6, 44, 46, 'down', 0.1),
             borderColor: chartColors.primary,
             backgroundColor: chartColors.background,
             tension: 0.4,
           },
           {
             label: 'Cost per Ton',
-            data: generateDataPoints(6, 350, 400),
+            data: generateDataPoints(6, 370, 390, 'down', 0.1),
             borderColor: chartColors.secondary,
-            backgroundColor: 'rgba(255, 99, 132, 0.1)',
+            backgroundColor: chartColors.greenBackground,
             tension: 0.4,
             yAxisID: 'y1',
           }
@@ -180,10 +207,12 @@ const kpiDefinitions = {
     {
       id: 'carbonEmissions',
       name: 'Carbon Emissions',
-      value: '125 tons',
+      value: '125.8 tons',
       target: '100 tons',
       trend: 'down',
       status: 'bad',
+      lowerIsBetter: true,
+      persona: 'cxo',
       chartType: 'bar',
       tileSize: '1x2', // Medium vertical tile
       chartData: {
@@ -191,14 +220,14 @@ const kpiDefinitions = {
         datasets: [
           {
             label: 'CO2 Emissions',
-            data: generateDataPoints(6, 110, 130),
+            data: generateDataPoints(6, 120, 130, 'down', 0.1),
             backgroundColor: chartColors.primary
           },
           {
             label: 'Target',
             data: Array(6).fill(100),
             type: 'line',
-            borderColor: chartColors.secondary,
+            borderColor: chartColors.tertiary,
             borderDash: [5, 5],
             fill: false,
             pointRadius: 0,
@@ -426,13 +455,15 @@ const kpiDefinitions = {
         value: '4.2 km/L',
         target: '4.5 km/L',
         trend: 'up',
+        persona: 'cxo',
+        lowerIsBetter: false,
         chartType: 'line',
         chartData: {
           labels: generateMonths(6),
           datasets: [
             {
               label: 'Efficiency',
-              data: generateDataPoints(6, 4.0, 4.3),
+              data: generateDataPoints(6, 4.0, 4.3, 'up', 0.05),
               borderColor: chartColors.primary,
               backgroundColor: 'transparent',
               tension: 0.4,
@@ -443,16 +474,17 @@ const kpiDefinitions = {
       {
         id: 'salesOrders',
         name: 'Sales Orders',
-        value: '4,250',
+        value: '4,285',
         target: '4,500',
         trend: 'up',
+        persona: 'cxo',
         chartType: 'line',
         chartData: {
           labels: generateMonths(6),
           datasets: [
             {
               label: 'Orders',
-              data: generateDataPoints(6, 4000, 4300),
+              data: generateDataPoints(6, 4100, 4300, 'up', 0.05),
               borderColor: chartColors.primary,
               backgroundColor: 'transparent',
               tension: 0.4,
@@ -463,16 +495,17 @@ const kpiDefinitions = {
       {
         id: 'tripCount',
         name: 'Trips (FTL/PTL)',
-        value: '1,850',
+        value: '1,872',
         target: '2,000',
         trend: 'up',
+        persona: 'cxo',
         chartType: 'line',
         chartData: {
           labels: generateMonths(6),
           datasets: [
             {
               label: 'Trips',
-              data: generateDataPoints(6, 1700, 1900),
+              data: generateDataPoints(6, 1800, 1900, 'up', 0.05),
               borderColor: chartColors.primary,
               backgroundColor: 'transparent',
               tension: 0.4,
@@ -483,17 +516,18 @@ const kpiDefinitions = {
       {
         id: 'inboundFreightCost',
         name: 'Inbound Freight Cost %',
-        value: '8.5%',
+        value: '8.4%',
         target: '8.0%',
         trend: 'down',
         lowerIsBetter: true,
+        persona: 'cxo',
         chartType: 'line',
         chartData: {
           labels: generateMonths(6),
           datasets: [
             {
               label: 'Cost %',
-              data: generateDataPoints(6, 8, 9).map(val => val / 10),
+              data: generateDataPoints(6, 8.3, 8.6, 'down', 0.05).map(val => parseFloat(val.toFixed(1))),
               borderColor: chartColors.primary,
               backgroundColor: 'transparent',
               tension: 0.4,

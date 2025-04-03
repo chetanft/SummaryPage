@@ -32,12 +32,61 @@ const DrillDownPane = ({ persona, kpi, onClose }) => {
 
         // Create region data with randomized but reasonable values
         const regions = standardRegions.map(region => {
-          // Generate a value between min and max, weighted toward the middle
-          const randomFactor = 0.5 + (Math.random() * 0.5);
-          const value = min + (range * randomFactor);
+          // Generate realistic values based on region characteristics
+          let regionFactor;
+
+          // Assign realistic factors based on region
+          switch(region) {
+            case 'North':
+              regionFactor = 0.85; // Slightly below average
+              break;
+            case 'South':
+              regionFactor = 0.95; // Just below average
+              break;
+            case 'East':
+              regionFactor = 1.15; // Above average
+              break;
+            case 'West':
+              regionFactor = 1.25; // Well above average
+              break;
+            case 'Central':
+              regionFactor = 1.05; // Slightly above average
+              break;
+            case 'Northeast':
+              regionFactor = 0.90; // Below average
+              break;
+            case 'Northwest':
+              regionFactor = 1.10; // Above average
+              break;
+            case 'Southeast':
+              regionFactor = 0.80; // Well below average
+              break;
+            case 'Southwest':
+              regionFactor = 0.75; // Worst performing
+              break;
+            default:
+              regionFactor = 1.0; // Average
+          }
+
+          // Add a small random variation
+          const randomVariation = 0.95 + (Math.random() * 0.1); // ±5% variation
+          const value = (min + (range * 0.5)) * regionFactor * randomVariation;
+
+          // Format based on KPI type
+          let formattedValue;
+          if (kpi.value.includes('%')) {
+            formattedValue = parseFloat(value.toFixed(1));
+          } else if (kpi.value.includes('₹')) {
+            formattedValue = parseFloat(value.toFixed(0));
+          } else if (kpi.value.includes('days')) {
+            formattedValue = parseFloat(value.toFixed(1));
+          } else {
+            formattedValue = parseFloat(value.toFixed(1));
+          }
+
           return {
             name: region,
-            value: parseFloat(value.toFixed(1))
+            value: formattedValue
           };
         });
 
@@ -69,21 +118,39 @@ const DrillDownPane = ({ persona, kpi, onClose }) => {
     }
 
     // Fallback data if chart data is not available
-    // Use the standard region names defined above
+    // Use the standard region names defined above with realistic values
+
+    // Extract numeric value from KPI value
+    let numericValue = parseFloat(kpi.value.replace(/[^0-9.]/g, ''));
+    if (isNaN(numericValue)) numericValue = 100; // Default if parsing fails
+
+    // Format function based on KPI type
+    const formatValue = (value) => {
+      if (kpi.value.includes('%')) {
+        return parseFloat(value.toFixed(1));
+      } else if (kpi.value.includes('₹')) {
+        return parseFloat(value.toFixed(0));
+      } else if (kpi.value.includes('days')) {
+        return parseFloat(value.toFixed(1));
+      } else {
+        return parseFloat(value.toFixed(1));
+      }
+    };
+
     return {
       topRegions: [
-        { name: 'North', value: kpi.value * 1.05 },
-        { name: 'West', value: kpi.value * 1.02 },
-        { name: 'South', value: kpi.value * 0.98 },
-        { name: 'East', value: kpi.value * 0.95 },
-        { name: 'Central', value: kpi.value * 0.92 }
+        { name: 'West', value: formatValue(numericValue * 1.25) },
+        { name: 'East', value: formatValue(numericValue * 1.15) },
+        { name: 'Central', value: formatValue(numericValue * 1.08) },
+        { name: 'Northwest', value: formatValue(numericValue * 1.05) },
+        { name: 'North', value: formatValue(numericValue * 1.02) }
       ],
       bottomRegions: [
-        { name: 'Northeast', value: kpi.value * 0.85 },
-        { name: 'Southwest', value: kpi.value * 0.82 },
-        { name: 'Northwest', value: kpi.value * 0.78 },
-        { name: 'Southeast', value: kpi.value * 0.75 },
-        { name: 'North Central', value: kpi.value * 0.70 }
+        { name: 'South', value: formatValue(numericValue * 0.95) },
+        { name: 'Northeast', value: formatValue(numericValue * 0.90) },
+        { name: 'South Central', value: formatValue(numericValue * 0.85) },
+        { name: 'Southeast', value: formatValue(numericValue * 0.80) },
+        { name: 'Southwest', value: formatValue(numericValue * 0.75) }
       ]
     };
   };
@@ -121,27 +188,59 @@ const DrillDownPane = ({ persona, kpi, onClose }) => {
         const currencySymbol = String(kpi.value).match(/^[\$₹€£¥]/)[0];
         return `${currencySymbol}${rawValue.toFixed(0)}`;
       }
+      // Check if the original value includes 'days'
+      else if (String(kpi.value).includes('days')) {
+        return `${rawValue.toFixed(1)} days`;
+      }
       // Default formatting
       else {
         return rawValue.toFixed(1);
       }
     };
 
+    // Generate realistic city names based on region
+    const getCitiesForRegion = (region) => {
+      const regionCities = {
+        'North': ['Delhi', 'Chandigarh', 'Lucknow', 'Dehradun', 'Shimla', 'Amritsar', 'Ludhiana', 'Jammu', 'Srinagar', 'Meerut'],
+        'South': ['Chennai', 'Bangalore', 'Hyderabad', 'Kochi', 'Coimbatore', 'Trivandrum', 'Madurai', 'Mysore', 'Visakhapatnam', 'Mangalore'],
+        'East': ['Kolkata', 'Bhubaneswar', 'Patna', 'Ranchi', 'Guwahati', 'Siliguri', 'Cuttack', 'Jamshedpur', 'Asansol', 'Dhanbad'],
+        'West': ['Mumbai', 'Pune', 'Ahmedabad', 'Surat', 'Vadodara', 'Rajkot', 'Nagpur', 'Nashik', 'Aurangabad', 'Jamnagar'],
+        'Central': ['Bhopal', 'Indore', 'Jaipur', 'Raipur', 'Jabalpur', 'Gwalior', 'Jodhpur', 'Udaipur', 'Kota', 'Ajmer'],
+        'Northeast': ['Guwahati', 'Shillong', 'Agartala', 'Imphal', 'Aizawl', 'Kohima', 'Itanagar', 'Dibrugarh', 'Jorhat', 'Tezpur'],
+        'Northwest': ['Jaipur', 'Jodhpur', 'Bikaner', 'Ajmer', 'Udaipur', 'Kota', 'Amritsar', 'Ludhiana', 'Chandigarh', 'Shimla'],
+        'Southeast': ['Chennai', 'Hyderabad', 'Visakhapatnam', 'Vijayawada', 'Tirupati', 'Pondicherry', 'Nellore', 'Rajahmundry', 'Kakinada', 'Guntur'],
+        'Southwest': ['Bangalore', 'Kochi', 'Mangalore', 'Mysore', 'Coimbatore', 'Madurai', 'Trivandrum', 'Kozhikode', 'Thrissur', 'Udupi'],
+        'North Central': ['Lucknow', 'Kanpur', 'Allahabad', 'Varanasi', 'Agra', 'Meerut', 'Bareilly', 'Moradabad', 'Aligarh', 'Gorakhpur'],
+        'South Central': ['Hyderabad', 'Vijayawada', 'Warangal', 'Tirupati', 'Nellore', 'Kurnool', 'Rajahmundry', 'Kakinada', 'Guntur', 'Nizamabad'],
+        'East Central': ['Ranchi', 'Jamshedpur', 'Dhanbad', 'Bokaro', 'Patna', 'Gaya', 'Bhagalpur', 'Muzaffarpur', 'Darbhanga', 'Purnia'],
+        'West Central': ['Indore', 'Bhopal', 'Jabalpur', 'Gwalior', 'Ujjain', 'Ratlam', 'Dewas', 'Rewa', 'Sagar', 'Satna']
+      };
+
+      return regionCities[region] || ['City 1', 'City 2', 'City 3', 'City 4', 'City 5', 'City 6', 'City 7', 'City 8', 'City 9', 'City 10'];
+    };
+
+    // Get cities for this region
+    const cities = getCitiesForRegion(region);
+
+    // Performance factors for top and bottom cities
+    const topCityFactors = [1.15, 1.12, 1.08, 1.05, 1.02];
+    const bottomCityFactors = [0.85, 0.82, 0.78, 0.75, 0.70];
+
     // Generate values that are relative to the KPI value
     return {
       topBranches: [
-        { name: `${region} - Delhi`, value: formatValue(1.08) },
-        { name: `${region} - Mumbai`, value: formatValue(1.05) },
-        { name: `${region} - Bangalore`, value: formatValue(1.02) },
-        { name: `${region} - Chennai`, value: formatValue(0.98) },
-        { name: `${region} - Hyderabad`, value: formatValue(0.95) }
+        { name: `${region} - ${cities[0]}`, value: formatValue(topCityFactors[0]) },
+        { name: `${region} - ${cities[1]}`, value: formatValue(topCityFactors[1]) },
+        { name: `${region} - ${cities[2]}`, value: formatValue(topCityFactors[2]) },
+        { name: `${region} - ${cities[3]}`, value: formatValue(topCityFactors[3]) },
+        { name: `${region} - ${cities[4]}`, value: formatValue(topCityFactors[4]) }
       ],
       bottomBranches: [
-        { name: `${region} - Jaipur`, value: formatValue(0.82) },
-        { name: `${region} - Lucknow`, value: formatValue(0.78) },
-        { name: `${region} - Bhopal`, value: formatValue(0.75) },
-        { name: `${region} - Patna`, value: formatValue(0.72) },
-        { name: `${region} - Guwahati`, value: formatValue(0.68) }
+        { name: `${region} - ${cities[5]}`, value: formatValue(bottomCityFactors[0]) },
+        { name: `${region} - ${cities[6]}`, value: formatValue(bottomCityFactors[1]) },
+        { name: `${region} - ${cities[7]}`, value: formatValue(bottomCityFactors[2]) },
+        { name: `${region} - ${cities[8]}`, value: formatValue(bottomCityFactors[3]) },
+        { name: `${region} - ${cities[9]}`, value: formatValue(bottomCityFactors[4]) }
       ]
     };
   };

@@ -55,6 +55,7 @@ main {
   margin-bottom: 1.5rem;
   width: 100%;
   box-sizing: border-box;
+  padding: 0 1.5rem; /* Match the padding of the grid */
 }
 
 /* Media queries for responsive grid */
@@ -63,6 +64,10 @@ main {
     grid-template-columns: repeat(2, 1fr);
     padding: 1.5rem;
   }
+
+  .kpi-strip-section {
+    padding: 0 1.5rem;
+  }
 }
 
 @media (min-width: 1024px) {
@@ -70,6 +75,10 @@ main {
     grid-template-columns: repeat(3, 1fr);
     padding: 2rem;
     max-width: 1600px;
+  }
+
+  .kpi-strip-section {
+    padding: 0 2rem;
   }
 }
 

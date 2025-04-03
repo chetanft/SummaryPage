@@ -139,11 +139,13 @@ const KpiStrip = ({ kpis }) => {
             <h4>{kpi.name}</h4>
           </div>
           <div className="kpi-strip-content">
-            <div className="kpi-strip-value" style={{ color: getValueColor(kpi) }}>
-              {kpi.value}
-            </div>
-            <div className="kpi-strip-target">
-              Target: {kpi.target}
+            <div className="kpi-strip-values">
+              <div className="kpi-strip-value" style={{ color: getValueColor(kpi) }}>
+                {kpi.value}
+              </div>
+              <div className="kpi-strip-target">
+                Target: {kpi.target}
+              </div>
             </div>
           </div>
           {renderSparkline(kpi)}

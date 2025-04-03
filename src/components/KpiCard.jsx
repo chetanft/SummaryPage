@@ -380,11 +380,27 @@ const KpiCard = ({ kpi, onClick }) => {
           // Determine if we need negative colors
           let colors = [];
 
+          // Get persona-specific color
+          let personaColor;
+          switch (kpi.persona || selectedPersona) {
+            case 'cxo':
+              personaColor = '#003c9b'; // Freight Tiger Blue for CXO
+              break;
+            case 'company':
+              personaColor = '#04bc15'; // Freight Tiger Green for Company
+              break;
+            case 'branch':
+              personaColor = '#ffbe07'; // Freight Tiger Yellow for Branch
+              break;
+            default:
+              personaColor = '#003c9b'; // Default to Freight Tiger Blue
+          }
+
           if (isPerformanceChart && dataset.data) {
             // For performance charts, color bars based on values
             colors = dataset.data.map(value => {
               if (value < 0) return '#ff4d4f'; // Negative values in custom red
-              return '#003c9b'; // Positive values in Freight Tiger Blue
+              return personaColor; // Positive values in persona-specific color
             });
           }
 
@@ -392,8 +408,10 @@ const KpiCard = ({ kpi, onClick }) => {
             ...dataset,
             borderRadius: 4, // Rounded corners
             maxBarThickness: 40,
-            backgroundColor: colors.length > 0 ? colors : (dataset.backgroundColor || '#003c9b'), // Freight Tiger Blue
-            hoverBackgroundColor: 'rgba(0, 60, 155, 0.85)', // Freight Tiger Blue with 85% opacity
+            backgroundColor: colors.length > 0 ? colors : (dataset.backgroundColor || personaColor), // Persona-specific color
+            hoverBackgroundColor: personaColor === '#003c9b' ? 'rgba(0, 60, 155, 0.85)' :
+                                 personaColor === '#04bc15' ? 'rgba(4, 188, 21, 0.85)' :
+                                 'rgba(255, 190, 7, 0.85)', // Persona-specific color with 85% opacity
             borderWidth: 0, // No border
           };
         });

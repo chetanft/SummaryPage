@@ -52,7 +52,7 @@
 .current-value, .target-value, .trend {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start; /* Align to the left */
 }
 
 .current-value span, .target-value span, .trend-label {
