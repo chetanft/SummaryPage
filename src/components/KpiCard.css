@@ -1,15 +1,21 @@
 .kpi-card {
-  background-color: white;
+  background-color: #ffffff;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
   padding: 1rem;
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .kpi-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
 }
 
 .kpi-header {
@@ -17,11 +23,24 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
+  position: relative;
 }
 
 .kpi-header h3 {
   margin: 0;
-  font-size: 1.2rem;
+  font-size: 1rem; /* 16px */
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+  color: #374151;
+}
+
+.status-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 8px;
+  display: inline-block;
 }
 
 .kpi-values {
@@ -36,24 +55,47 @@
   align-items: center;
 }
 
-.current-value span, .target-value span {
-  font-size: 0.8rem;
-  color: #666;
+.current-value span, .target-value span, .trend-label {
+  font-size: 0.75rem; /* 12px */
+  color: #6b7280;
+  margin-bottom: 0.25rem;
 }
 
-.current-value strong, .target-value strong {
-  font-size: 1.5rem;
+.current-value strong {
+  font-size: 2rem; /* 32px */
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.target-value strong {
+  font-size: 1.25rem; /* 20px */
+  font-weight: 500;
+  color: #4b5563;
 }
 
 .trend-icon {
-  font-size: 1.8rem;
+  font-size: 1.5rem; /* 24px */
   font-weight: bold;
+}
+
+.trend-value {
+  font-size: 1rem; /* 16px */
+  font-weight: 500;
+  color: #9ca3af;
+}
+
+.trend-container {
+  display: flex;
+  align-items: center;
 }
 
 .kpi-chart {
   flex: 1;
   min-height: 150px;
   margin-top: 1rem;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
 }
 
 /* Tile size classes */

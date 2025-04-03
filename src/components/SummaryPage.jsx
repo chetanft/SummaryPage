@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './SummaryPage.css';
 import KpiCard from './KpiCard';
+import KpiStrip from './KpiStrip';
 import DrillDownPane from './DrillDownPane';
 import kpiDefinitions from '../data/kpiData';
 
@@ -39,14 +40,22 @@ const SummaryPage = () => {
         </div>
       </header>
 
-      <main className="kpi-grid">
-        {kpiDefinitions[selectedPersona].map(kpi => (
-          <KpiCard
-            key={kpi.id}
-            kpi={kpi}
-            onClick={handleKpiClick}
-          />
-        ))}
+      <main>
+        {/* Not-so-important KPIs in a horizontal strip at the top */}
+        <section className="kpi-strip-section">
+          <KpiStrip kpis={kpiDefinitions[selectedPersona].notImportant.map(kpi => ({ ...kpi, persona: selectedPersona }))} />
+        </section>
+
+        {/* Important KPIs with full charts */}
+        <section className="kpi-grid">
+          {kpiDefinitions[selectedPersona].important.map(kpi => (
+            <KpiCard
+              key={kpi.id}
+              kpi={kpi}
+              onClick={handleKpiClick}
+            />
+          ))}
+        </section>
       </main>
 
       {drillDownOpen && (

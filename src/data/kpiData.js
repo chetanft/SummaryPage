@@ -1,6 +1,45 @@
 // KPI data with chart configurations and tooltip content
 // This file contains mock data for the Summary Page KPIs with Bento grid layout
 
+// KPI dependency map - defines which KPIs depend on others
+export const kpiDependencies = {
+  // Company Level Dependencies
+  orderExecutionTime: ['transitTime', 'unloadingTurnaround', 'cleanPod', 'invoiceSubmission'],
+  vehicleUtilization: ['freightCosts', 'weightVolumeMetrics', 'tripCount'],
+  placementEfficiency: ['statusFlow'],
+  freightCosts: ['otherCharges', 'costPercentage'],
+  cleanPod: ['invoiceCycle'],
+  invoiceCycle: ['materialInvoices', 'freightInvoices'],
+
+  // Branch Level Dependencies
+  statusFlow: ['realTimeTrips', 'transitTimeMonitoring'],
+  transitTimeMonitoring: ['unloadingTurnaround'],
+  unloadingTurnaround: ['branchCleanPod'],
+  branchCleanPod: ['invoiceSubmission'],
+
+  // CXO Level Dependencies
+  revenueProfitTrends: [],
+  orderToDelivery: ['freightCostTrends'],
+  tripCount: ['carbonEmissions']
+};
+
+// Helper function to check if a KPI is dependent on another
+export const isDependentOn = (dependentId, parentId) => {
+  // Direct dependency
+  if (kpiDependencies[parentId] && kpiDependencies[parentId].includes(dependentId)) {
+    return true;
+  }
+
+  // Check for indirect dependencies (dependency chains)
+  for (const directDependentId of (kpiDependencies[parentId] || [])) {
+    if (isDependentOn(dependentId, directDependentId)) {
+      return true;
+    }
+  }
+
+  return false;
+};
+
 // Helper function to generate random data points
 const generateDataPoints = (count, min, max) => {
   return Array.from({ length: count }, () =>
@@ -24,10 +63,12 @@ const chartColors = {
   background: 'rgba(54, 162, 235, 0.1)'
 };
 
-// KPI definitions for all personas with tile sizes
+// KPI definitions for all personas with tile sizes and importance
 const kpiDefinitions = {
   // CXO Level KPIs
-  cxo: [
+  cxo: {
+    // Important KPIs - shown prominently with full charts
+    important: [
     {
       id: 'revenueProfitTrends',
       name: 'Revenue & Profit Trends',
@@ -35,6 +76,7 @@ const kpiDefinitions = {
       target: '₹ 15 Cr',
       trend: 'up',
       status: 'warning',
+      persona: 'cxo',
       chartType: 'line',
       tileSize: '2x2', // Large tile
       chartData: {
@@ -374,10 +416,98 @@ const kpiDefinitions = {
         calculation: 'Count of all sales orders and delivery orders in the period.'
       }
     }
-  ],
+    ],
+
+    // Non-important KPIs - shown as mini inline charts
+    notImportant: [
+      {
+        id: 'fuelEfficiency',
+        name: 'Fuel Efficiency',
+        value: '4.2 km/L',
+        target: '4.5 km/L',
+        trend: 'up',
+        chartType: 'line',
+        chartData: {
+          labels: generateMonths(6),
+          datasets: [
+            {
+              label: 'Efficiency',
+              data: generateDataPoints(6, 4.0, 4.3),
+              borderColor: chartColors.primary,
+              backgroundColor: 'transparent',
+              tension: 0.4,
+            }
+          ]
+        }
+      },
+      {
+        id: 'salesOrders',
+        name: 'Sales Orders',
+        value: '4,250',
+        target: '4,500',
+        trend: 'up',
+        chartType: 'line',
+        chartData: {
+          labels: generateMonths(6),
+          datasets: [
+            {
+              label: 'Orders',
+              data: generateDataPoints(6, 4000, 4300),
+              borderColor: chartColors.primary,
+              backgroundColor: 'transparent',
+              tension: 0.4,
+            }
+          ]
+        }
+      },
+      {
+        id: 'tripCount',
+        name: 'Trips (FTL/PTL)',
+        value: '1,850',
+        target: '2,000',
+        trend: 'up',
+        chartType: 'line',
+        chartData: {
+          labels: generateMonths(6),
+          datasets: [
+            {
+              label: 'Trips',
+              data: generateDataPoints(6, 1700, 1900),
+              borderColor: chartColors.primary,
+              backgroundColor: 'transparent',
+              tension: 0.4,
+            }
+          ]
+        }
+      },
+      {
+        id: 'inboundFreightCost',
+        name: 'Inbound Freight Cost %',
+        value: '8.5%',
+        target: '8.0%',
+        trend: 'down',
+        lowerIsBetter: true,
+        chartType: 'line',
+        chartData: {
+          labels: generateMonths(6),
+          datasets: [
+            {
+              label: 'Cost %',
+              data: generateDataPoints(6, 8, 9).map(val => val / 10),
+              borderColor: chartColors.primary,
+              backgroundColor: 'transparent',
+              tension: 0.4,
+            }
+          ]
+        }
+      }
+    ]
+  },
 
   // Company Level KPIs
-  company: [
+  company: {
+    // Important KPIs - shown prominently with full charts
+    important: [
     {
       id: 'orderExecutionTime',
       name: 'Order Execution Time (OET)',
@@ -750,10 +880,98 @@ const kpiDefinitions = {
         calculation: 'Count of all FTL and PTL trips completed in the period.'
       }
     }
-  ],
+    ],
+
+    // Non-important KPIs - shown as mini inline charts
+    notImportant: [
+      {
+        id: 'otherCharges',
+        name: 'Other Charges %',
+        value: '12.5%',
+        target: '10.0%',
+        trend: 'down',
+        lowerIsBetter: true,
+        chartType: 'line',
+        chartData: {
+          labels: generateMonths(6),
+          datasets: [
+            {
+              label: 'Other Charges',
+              data: generateDataPoints(6, 11, 13).map(val => val / 10),
+              borderColor: chartColors.primary,
+              backgroundColor: 'transparent',
+              tension: 0.4,
+            }
+          ]
+        }
+      },
+      {
+        id: 'materialInvoices',
+        name: 'Material Invoices',
+        value: '1,250',
+        target: '1,300',
+        trend: 'up',
+        chartType: 'line',
+        chartData: {
+          labels: generateMonths(6),
+          datasets: [
+            {
+              label: 'Invoices',
+              data: generateDataPoints(6, 1100, 1300),
+              borderColor: chartColors.primary,
+              backgroundColor: 'transparent',
+              tension: 0.4,
+            }
+          ]
+        }
+      },
+      {
+        id: 'freightInvoices',
+        name: 'Freight Invoices',
+        value: '850',
+        target: '900',
+        trend: 'up',
+        chartType: 'line',
+        chartData: {
+          labels: generateMonths(6),
+          datasets: [
+            {
+              label: 'Invoices',
+              data: generateDataPoints(6, 800, 900),
+              borderColor: chartColors.primary,
+              backgroundColor: 'transparent',
+              tension: 0.4,
+            }
+          ]
+        }
+      },
+      {
+        id: 'companyTripCount',
+        name: 'Trip Count',
+        value: '650',
+        target: '700',
+        trend: 'up',
+        chartType: 'line',
+        chartData: {
+          labels: generateMonths(6),
+          datasets: [
+            {
+              label: 'Trips',
+              data: generateDataPoints(6, 600, 700),
+              borderColor: chartColors.primary,
+              backgroundColor: 'transparent',
+              tension: 0.4,
+            }
+          ]
+        }
+      }
+    ]
+  },
 
   // Branch Level KPIs
-  branch: [
+  branch: {
+    // Important KPIs - shown prominently with full charts
+    important: [
     {
       id: 'statusFlow',
       name: 'Status Flow (Indent to Gate Out)',
@@ -1127,7 +1345,93 @@ const kpiDefinitions = {
         calculation: 'Count of all material and freight invoices raised in the period.'
       }
     }
-  ]
+    ],
+
+    // Non-important KPIs - shown as mini inline charts
+    notImportant: [
+      {
+        id: 'unloadingTime',
+        name: 'Unloading Time',
+        value: '2.5 hrs',
+        target: '2.0 hrs',
+        trend: 'down',
+        lowerIsBetter: true,
+        chartType: 'line',
+        chartData: {
+          labels: generateMonths(6),
+          datasets: [
+            {
+              label: 'Hours',
+              data: generateDataPoints(6, 2.3, 2.8),
+              borderColor: chartColors.primary,
+              backgroundColor: 'transparent',
+              tension: 0.4,
+            }
+          ]
+        }
+      },
+      {
+        id: 'branchCleanPod',
+        name: 'Clean POD',
+        value: '82%',
+        target: '90%',
+        trend: 'up',
+        chartType: 'line',
+        chartData: {
+          labels: generateMonths(6),
+          datasets: [
+            {
+              label: 'Clean POD %',
+              data: generateDataPoints(6, 75, 85),
+              borderColor: chartColors.primary,
+              backgroundColor: 'transparent',
+              tension: 0.4,
+            }
+          ]
+        }
+      },
+      {
+        id: 'placementEfficiency',
+        name: 'Placement Efficiency',
+        value: '78%',
+        target: '85%',
+        trend: 'up',
+        chartType: 'line',
+        chartData: {
+          labels: generateMonths(6),
+          datasets: [
+            {
+              label: 'Efficiency',
+              data: generateDataPoints(6, 75, 80),
+              borderColor: chartColors.primary,
+              backgroundColor: 'transparent',
+              tension: 0.4,
+            }
+          ]
+        }
+      },
+      {
+        id: 'branchSalesOrders',
+        name: 'Sales Orders',
+        value: '450',
+        target: '500',
+        trend: 'up',
+        chartType: 'line',
+        chartData: {
+          labels: generateMonths(6),
+          datasets: [
+            {
+              label: 'Orders',
+              data: generateDataPoints(6, 420, 470),
+              borderColor: chartColors.primary,
+              backgroundColor: 'transparent',
+              tension: 0.4,
+            }
+          ]
+        }
+      }
+    ]
+  }
 };
 
 export default kpiDefinitions;
