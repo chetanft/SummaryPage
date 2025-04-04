@@ -1,0 +1,114 @@
+.branch-tabs-container {
+  margin-bottom: 1rem;
+  margin-top: 0.5rem;
+  background-color: #f9fafb;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+.branch-tabs-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111827;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+
+.branch-tabs-description {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-top: 0;
+  margin-bottom: 1.25rem;
+  line-height: 1.5;
+}
+
+.tabs-header {
+  display: flex;
+  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 1.5rem;
+  overflow-x: auto;
+  scrollbar-width: none; /* Firefox */
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+  white-space: nowrap;
+  padding-bottom: 2px; /* Add a bit of padding to make it easier to see the active tab */
+}
+
+.tabs-header::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge */
+}
+
+/* Add a subtle indicator that the tabs are scrollable */
+.tabs-header::after {
+  content: '';
+  flex: 0 0 16px;
+}
+
+.tab-button {
+  padding: 0.75rem 1.25rem;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.tab-button:hover {
+  color: #003c9b;
+}
+
+.tab-button.active {
+  color: #003c9b;
+  border-bottom: 2px solid #003c9b;
+}
+
+.tab-content {
+  padding: 0.5rem 0;
+}
+
+.tab-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  max-height: 600px; /* Prevent excessive scrolling if there are many KPIs */
+  overflow-y: auto;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Responsive adjustments */
+@media (min-width: 1200px) {
+  .tab-kpi-grid {
+    grid-template-columns: repeat(4, 1fr); /* 4 cards per row on large screens */
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
+  .tab-kpi-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 cards per row on medium screens */
+  }
+}
+
+@media (max-width: 767px) {
+  .tab-kpi-grid {
+    grid-template-columns: 1fr; /* 1 card per row on small screens */
+    max-height: none; /* Allow scrolling on small screens */
+  }
+
+  .tab-button {
+    padding: 0.75rem 1rem;
+  }
+
+  .branch-tabs-container {
+    padding: 1rem;
+  }
+}

@@ -132,7 +132,7 @@ const KpiStrip = ({ kpis }) => {
   };
 
   return (
-    <div className="kpi-strip">
+    <>
       {kpis.map((kpi) => (
         <div key={kpi.id} className="kpi-strip-item">
           <div className="kpi-strip-header">
@@ -151,7 +151,7 @@ const KpiStrip = ({ kpis }) => {
           {renderSparkline(kpi)}
         </div>
       ))}
-    </div>
+    </>
   );
 };
 

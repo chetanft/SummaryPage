@@ -1,0 +1,142 @@
+.tab-kpi-card {
+  background-color: #ffffff;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.05);
+  padding: 1rem;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  position: relative;
+  transition: background-color 0.2s ease;
+}
+
+.tab-kpi-card:hover {
+  background-color: #f9fafb;
+}
+
+.tab-kpi-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
+}
+
+.tab-kpi-header h3 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.info-icon {
+  color: #6b7280;
+  cursor: pointer;
+  position: relative;
+  font-size: 16px;
+}
+
+.info-icon:hover {
+  color: #003c9b;
+}
+
+.tooltip {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 250px;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 0.75rem;
+  z-index: 10;
+  font-size: 0.75rem;
+  color: #374151;
+  text-align: left;
+}
+
+.tooltip-title {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: #003c9b;
+}
+
+.tooltip-action {
+  color: #04bc15;
+  margin-top: 0.5rem;
+}
+
+.action-text {
+  color: #04bc15;
+  font-weight: 500;
+}
+
+.tooltip p {
+  margin: 0 0 0.5rem 0;
+  line-height: 1.4;
+}
+
+.tab-kpi-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+}
+
+.current-value {
+  font-size: 32px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 0.25rem;
+  text-align: left;
+}
+
+.last-week {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 13px;
+}
+
+.last-week-label {
+  color: #6b7280;
+}
+
+.last-week-value {
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.trend-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 14px;
+  font-weight: 700;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.trend-indicator svg {
+  font-size: 16px;
+}
+
+.trend-percentage {
+  margin-left: 0.25rem;
+}
+
+.no-data-message {
+  font-size: 0.875rem;
+  color: #6b7280;
+  font-style: italic;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+}

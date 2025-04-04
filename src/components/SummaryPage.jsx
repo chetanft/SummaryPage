@@ -3,6 +3,7 @@ import './SummaryPage.css';
 import KpiCard from './KpiCard';
 import KpiStrip from './KpiStrip';
 import DrillDownPane from './DrillDownPane';
+import BranchTabs from './BranchTabs';
 import kpiDefinitions from '../data/kpiData';
 
 const SummaryPage = () => {
@@ -40,21 +41,32 @@ const SummaryPage = () => {
         </div>
       </header>
 
-      <main>
-        {/* Not-so-important KPIs in a horizontal strip at the top */}
-        <section className="kpi-strip-section">
-          <KpiStrip kpis={kpiDefinitions[selectedPersona].notImportant.map(kpi => ({ ...kpi, persona: selectedPersona }))} />
-        </section>
+      <main className="main-content">
+        {/* Branch-specific tabbed section - only shown for Branch persona */}
+        {selectedPersona === 'branch' && (
+          <>
+            <BranchTabs />
+            <div className="section-divider">
+              <span>Summary KPIs</span>
+            </div>
+          </>
+        )}
 
         {/* Important KPIs with full charts */}
         <section className="kpi-grid">
           {kpiDefinitions[selectedPersona].important.map(kpi => (
-            <KpiCard
-              key={kpi.id}
-              kpi={kpi}
-              onClick={handleKpiClick}
-            />
+            <div key={kpi.id} className={`tile-${kpi.tileSize || '1x1'}`}>
+              <KpiCard
+                kpi={kpi}
+                onClick={handleKpiClick}
+              />
+            </div>
           ))}
+        </section>
+
+        {/* Not-so-important KPIs in a horizontal strip at the bottom */}
+        <section className="kpi-strip-section">
+          <KpiStrip kpis={kpiDefinitions[selectedPersona].notImportant.map(kpi => ({ ...kpi, persona: selectedPersona }))} />
         </section>
       </main>
 

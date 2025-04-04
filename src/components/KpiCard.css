@@ -11,6 +11,8 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;
+  max-width: 100%;
 }
 
 .kpi-card:hover {
