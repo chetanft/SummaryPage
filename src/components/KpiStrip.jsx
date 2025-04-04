@@ -120,7 +120,7 @@ const KpiStrip = ({ kpis }) => {
         line: {
           borderWidth: 2, // Slightly thicker line
           tension: 0.4, // Smooth curve
-          fill: true, // Add fill under the line
+          fill: false, // No fill under the line
         },
       },
     };
@@ -132,13 +132,7 @@ const KpiStrip = ({ kpis }) => {
         {
           ...chartData.datasets[0],
           borderColor: trendColor,
-          backgroundColor: (context) => {
-            const ctx = context.chart.ctx;
-            const gradient = ctx.createLinearGradient(0, 0, 0, 40);
-            gradient.addColorStop(0, `${trendColor}40`); // 25% opacity
-            gradient.addColorStop(1, `${trendColor}00`); // 0% opacity
-            return gradient;
-          },
+          backgroundColor: 'transparent', // No background color
           pointBackgroundColor: trendColor,
           pointBorderColor: trendColor,
           borderWidth: 2,
