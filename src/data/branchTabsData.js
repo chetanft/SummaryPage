@@ -65,6 +65,7 @@ export const branchTabsData = {
       name: 'Indents Published',
       currentValue: '178',
       lastWeekValue: '165',
+      target: '170',
       lowerIsBetter: false,
       tooltip: {
         definition: 'Number of vehicle indents published to transporters this week.',
@@ -77,6 +78,7 @@ export const branchTabsData = {
       name: 'Indents Accepted',
       currentValue: '152',
       lastWeekValue: '140',
+      target: '160',
       lowerIsBetter: false,
       tooltip: {
         definition: 'Number of published indents that have been accepted by transporters.',
@@ -130,6 +132,7 @@ export const branchTabsData = {
       name: 'Trips Started',
       currentValue: '118',
       lastWeekValue: '110',
+      target: '115',
       lowerIsBetter: false,
       tooltip: {
         definition: 'Number of FTL trips that have started this week.',
@@ -142,6 +145,7 @@ export const branchTabsData = {
       name: 'Trips Not Started',
       currentValue: '14',
       lastWeekValue: '18',
+      target: '10',
       lowerIsBetter: true,
       tooltip: {
         definition: 'Number of trips that should have started today but haven\'t.',
@@ -155,6 +159,7 @@ export const branchTabsData = {
       name: 'On-Time Trips (%)',
       currentValue: '78%',
       lastWeekValue: '72%',
+      target: '85%',
       lowerIsBetter: false,
       tooltip: {
         definition: 'Percentage of trips that are running on schedule.',
@@ -180,6 +185,7 @@ export const branchTabsData = {
       name: 'Trucks Arriving Today',
       currentValue: '28',
       lastWeekValue: '24',
+      target: '25',
       lowerIsBetter: false,
       tooltip: {
         definition: 'Number of trucks expected to arrive at the warehouse today.',
@@ -196,6 +202,7 @@ export const branchTabsData = {
       name: 'Orders Generated',
       currentValue: '325',
       lastWeekValue: '310',
+      target: '300',
       lowerIsBetter: false,
       tooltip: {
         definition: 'Number of PTL orders generated this week.',
@@ -208,6 +215,7 @@ export const branchTabsData = {
       name: 'Orders Assigned to Couriers',
       currentValue: '298',
       lastWeekValue: '285',
+      target: '310',
       lowerIsBetter: false,
       tooltip: {
         definition: 'Number of PTL orders assigned to courier partners.',
@@ -220,6 +228,7 @@ export const branchTabsData = {
       name: 'Orders Picked Up',
       currentValue: '275',
       lastWeekValue: '260',
+      target: '290',
       lowerIsBetter: false,
       tooltip: {
         definition: 'Number of PTL orders that have been picked up by couriers.',
@@ -256,6 +265,7 @@ export const branchTabsData = {
       name: 'Delayed Deliveries',
       currentValue: '32',
       lastWeekValue: '38',
+      target: '25',
       lowerIsBetter: true,
       tooltip: {
         definition: 'Number of PTL orders that were delivered after the promised delivery date.',
@@ -273,6 +283,7 @@ export const branchTabsData = {
       name: 'Invoices Raised',
       currentValue: '142',
       lastWeekValue: '135',
+      target: '140',
       lowerIsBetter: false,
       tooltip: {
         definition: 'Number of freight invoices raised in the current week.',
@@ -285,6 +296,7 @@ export const branchTabsData = {
       name: 'Invoices Approved',
       currentValue: '128',
       lastWeekValue: '120',
+      target: '130',
       lowerIsBetter: false,
       tooltip: {
         definition: 'Number of freight invoices approved for payment this week.',
@@ -297,6 +309,7 @@ export const branchTabsData = {
       name: 'Invoice Approval Time',
       currentValue: '2.8 days',
       lastWeekValue: '3.2 days',
+      target: '2.5 days',
       lowerIsBetter: true,
       tooltip: {
         definition: 'Average time taken to approve an invoice after it is raised.',
@@ -310,6 +323,7 @@ export const branchTabsData = {
       name: 'Rejected Invoices',
       currentValue: '8',
       lastWeekValue: '12',
+      target: '5',
       lowerIsBetter: true,
       tooltip: {
         definition: 'Number of freight invoices rejected in the current week.',
@@ -323,6 +337,7 @@ export const branchTabsData = {
       name: 'Pending Invoices',
       currentValue: null,
       lastWeekValue: '15',
+      target: '10',
       lowerIsBetter: true,
       tooltip: {
         definition: 'Number of invoices pending approval at the end of the week.',
