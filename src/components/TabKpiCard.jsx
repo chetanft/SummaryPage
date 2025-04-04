@@ -44,8 +44,57 @@ const TabKpiCard = ({ kpi }) => {
     return `${absPercentage}%`;
   };
 
+  // Determine if value is above or below target
+  const isAboveTarget = () => {
+    if (!kpi.currentValue || !kpi.target) return false;
+
+    // Extract numeric values
+    const valueNumeric = parseFloat(kpi.currentValue.toString().replace(/[^0-9.-]+/g, ''));
+    const targetNumeric = parseFloat(kpi.target.toString().replace(/[^0-9.-]+/g, ''));
+
+    if (isNaN(valueNumeric) || isNaN(targetNumeric)) return false;
+
+    // For KPIs where lower is better, the logic is reversed
+    if (kpi.lowerIsBetter) {
+      return valueNumeric <= targetNumeric;
+    }
+
+    return valueNumeric >= targetNumeric;
+  };
+
+  const isBelowTarget = () => {
+    if (!kpi.currentValue || !kpi.target) return false;
+
+    // Extract numeric values
+    const valueNumeric = parseFloat(kpi.currentValue.toString().replace(/[^0-9.-]+/g, ''));
+    const targetNumeric = parseFloat(kpi.target.toString().replace(/[^0-9.-]+/g, ''));
+
+    if (isNaN(valueNumeric) || isNaN(targetNumeric)) return false;
+
+    // For KPIs where lower is better, the logic is reversed
+    if (kpi.lowerIsBetter) {
+      return valueNumeric > targetNumeric;
+    }
+
+    return valueNumeric < targetNumeric;
+  };
+
+  // Determine the appropriate class based on target comparison
+  const getTargetComparisonClass = () => {
+    if (isAboveTarget()) return 'above-target';
+    if (isBelowTarget()) return 'below-target';
+    return '';
+  };
+
+  // Determine the appropriate class based on trend direction
+  const getTrendDirectionClass = () => {
+    if (!calculateTrendPercentage()) return '';
+    if (isTrendPositive()) return 'trend-up';
+    return 'trend-down';
+  };
+
   return (
-    <div className="tab-kpi-card">
+    <div className={`tab-kpi-card ${getTargetComparisonClass()} ${getTrendDirectionClass()}`}>
       <div className="tab-kpi-header">
         <h3>{kpi.name}</h3>
         <div
@@ -77,12 +126,16 @@ const TabKpiCard = ({ kpi }) => {
         {kpi.currentValue ? (
           <>
             <div className="current-value">{kpi.currentValue}</div>
+            <div className="target-value">
+              <span className="target-label">Target:</span>
+              <span className="target-value-number">{kpi.target || 'N/A'}</span>
+            </div>
             <div className="last-week">
               <span className="last-week-label">Last Week:</span>
               <span className="last-week-value">{kpi.lastWeekValue || 'N/A'}</span>
             </div>
             {calculateTrendPercentage() !== 0 && (
-              <div className="trend-indicator" style={{ color: getTrendColor() }}>
+              <div className="trend-indicator">
                 {isTrendPositive() ? <FaArrowUp /> : <FaArrowDown />}
                 <span className="trend-percentage">{formatTrendPercentage()}</span>
               </div>

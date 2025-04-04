@@ -3,13 +3,14 @@
   border-radius: 8px;
   border: 1px solid #e5e7eb;
   box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.05);
-  padding: 1rem;
+  padding: 1.25rem;
   min-height: 120px;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
   position: relative;
   transition: background-color 0.2s ease;
+  gap: 0.75rem;
 }
 
 .tab-kpi-card:hover {
@@ -25,20 +26,22 @@
 
 .tab-kpi-header h3 {
   margin: 0;
-  font-size: 14px;
+  font-size: 1.125rem; /* 18px */
   font-weight: 600;
   color: #111827;
+  line-height: 1.4;
 }
 
 .info-icon {
   color: #6b7280;
   cursor: pointer;
   position: relative;
-  font-size: 16px;
+  font-size: 0.875rem; /* 14px */
+  transition: color 0.2s ease;
 }
 
 .info-icon:hover {
-  color: #003c9b;
+  color: #111827;
 }
 
 .tooltip {
@@ -87,22 +90,50 @@
 }
 
 .current-value {
-  font-size: 32px;
+  font-size: 2rem; /* 32px */
   font-weight: 700;
-  color: #111827;
+  color: #374151; /* Neutral color - will be overridden */
   margin-bottom: 0.25rem;
   text-align: left;
+}
+
+.above-target .current-value {
+  color: #10b981; /* Emerald Green for above target */
+}
+
+.below-target .current-value {
+  color: #ef4444; /* Rose Red for below target */
+}
+
+.target-value {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.875rem; /* 14px */
+  margin-bottom: 0.25rem;
+}
+
+.target-label {
+  color: #6b7280;
+  font-weight: 400;
+}
+
+.target-value-number {
+  font-size: 1.125rem; /* 18px */
+  font-weight: 600;
+  color: #1f2937;
 }
 
 .last-week {
   display: flex;
   align-items: center;
   gap: 0.25rem;
-  font-size: 13px;
+  font-size: 0.875rem; /* 14px */
 }
 
 .last-week-label {
   color: #6b7280;
+  font-weight: 400;
 }
 
 .last-week-value {
@@ -114,8 +145,8 @@
   display: flex;
   align-items: center;
   gap: 0.25rem;
-  font-size: 14px;
-  font-weight: 700;
+  font-size: 1rem; /* 16px */
+  font-weight: 600;
   position: absolute;
   right: 0;
   top: 50%;
@@ -123,7 +154,20 @@
 }
 
 .trend-indicator svg {
-  font-size: 16px;
+  font-size: 1rem; /* 16px */
+}
+
+/* Trend colors */
+.trend-up .trend-indicator {
+  color: #10b981; /* Emerald Green for upward trend */
+}
+
+.trend-down .trend-indicator {
+  color: #ef4444; /* Rose Red for downward trend */
+}
+
+.trend-neutral .trend-indicator {
+  color: #9ca3af; /* Cool Gray for neutral trend */
 }
 
 .trend-percentage {

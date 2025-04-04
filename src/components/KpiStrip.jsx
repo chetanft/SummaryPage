@@ -131,20 +131,63 @@ const KpiStrip = ({ kpis }) => {
     }
   };
 
+  // Determine if value is above or below target for a KPI
+  const isAboveTarget = (kpi) => {
+    if (!kpi.value || !kpi.target) return false;
+
+    // Extract numeric values
+    const valueNumeric = parseFloat(kpi.value.toString().replace(/[^0-9.-]+/g, ''));
+    const targetNumeric = parseFloat(kpi.target.toString().replace(/[^0-9.-]+/g, ''));
+
+    if (isNaN(valueNumeric) || isNaN(targetNumeric)) return false;
+
+    // For KPIs where lower is better, the logic is reversed
+    if (kpi.lowerIsBetter) {
+      return valueNumeric <= targetNumeric;
+    }
+
+    return valueNumeric >= targetNumeric;
+  };
+
+  const isBelowTarget = (kpi) => {
+    if (!kpi.value || !kpi.target) return false;
+
+    // Extract numeric values
+    const valueNumeric = parseFloat(kpi.value.toString().replace(/[^0-9.-]+/g, ''));
+    const targetNumeric = parseFloat(kpi.target.toString().replace(/[^0-9.-]+/g, ''));
+
+    if (isNaN(valueNumeric) || isNaN(targetNumeric)) return false;
+
+    // For KPIs where lower is better, the logic is reversed
+    if (kpi.lowerIsBetter) {
+      return valueNumeric > targetNumeric;
+    }
+
+    return valueNumeric < targetNumeric;
+  };
+
+  // Get the appropriate class based on target comparison
+  const getTargetComparisonClass = (kpi) => {
+    if (isAboveTarget(kpi)) return 'above-target';
+    if (isBelowTarget(kpi)) return 'below-target';
+    return '';
+  };
+
   return (
     <>
       {kpis.map((kpi) => (
-        <div key={kpi.id} className="kpi-strip-item">
+        <div key={kpi.id} className={`kpi-strip-item ${getTargetComparisonClass(kpi)}`}>
           <div className="kpi-strip-header">
             <h4>{kpi.name}</h4>
           </div>
           <div className="kpi-strip-content">
             <div className="kpi-strip-values">
-              <div className="kpi-strip-value" style={{ color: getValueColor(kpi) }}>
+              <div className="kpi-strip-value">
                 {kpi.value}
               </div>
               <div className="kpi-strip-target">
-                Target: {kpi.target}
+                <span className="kpi-strip-target-label">Target:</span>
+                <span className="kpi-strip-target-value">{kpi.target}</span>
               </div>
             </div>
           </div>

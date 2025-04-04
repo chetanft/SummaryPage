@@ -3,7 +3,7 @@
   border-radius: 8px;
   border: 1px solid #e5e7eb;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
-  padding: 1rem;
+  padding: 1.25rem;
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
   width: 100%;
@@ -24,17 +24,18 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
   position: relative;
 }
 
 .kpi-header h3 {
   margin: 0;
-  font-size: 1rem; /* 16px */
+  font-size: 1.125rem; /* 18px */
   display: flex;
   align-items: center;
-  font-weight: 500;
-  color: #374151;
+  font-weight: 600;
+  color: #111827;
+  line-height: 1.4;
 }
 
 .status-indicator {
@@ -57,38 +58,79 @@
   align-items: flex-start; /* Align to the left */
 }
 
-.current-value span, .target-value span, .trend-label {
+.current-value span, .trend-label {
   font-size: 0.75rem; /* 12px */
+  color: #6b7280;
+  margin-bottom: 0.25rem;
+}
+
+.target-value span {
+  font-size: 0.875rem; /* 14px */
+  font-weight: 400;
   color: #6b7280;
   margin-bottom: 0.25rem;
 }
 
 .current-value strong {
   font-size: 2rem; /* 32px */
+  font-weight: 700;
+  color: #374151; /* Neutral color - will be overridden for above/below target */
+}
+
+.above-target .current-value strong {
+  color: #10b981; /* Emerald Green for above target */
+}
+
+.below-target .current-value strong {
+  color: #ef4444; /* Rose Red for below target */
+}
+
+.target-value strong {
+  font-size: 1.125rem; /* 18px */
   font-weight: 600;
   color: #1f2937;
 }
 
-.target-value strong {
-  font-size: 1.25rem; /* 20px */
-  font-weight: 500;
-  color: #4b5563;
-}
-
 .trend-icon {
-  font-size: 1.5rem; /* 24px */
+  font-size: 1rem; /* 16px */
   font-weight: bold;
 }
 
 .trend-value {
   font-size: 1rem; /* 16px */
-  font-weight: 500;
-  color: #9ca3af;
+  font-weight: 600;
+  color: #9ca3af; /* Neutral color - will be overridden */
+}
+
+.trend-up .trend-icon,
+.trend-up .trend-value {
+  color: #10b981; /* Emerald Green for upward trend */
+}
+
+.trend-down .trend-icon,
+.trend-down .trend-value {
+  color: #ef4444; /* Rose Red for downward trend */
+}
+
+.trend-neutral .trend-icon,
+.trend-neutral .trend-value {
+  color: #9ca3af; /* Cool Gray for neutral trend */
 }
 
 .trend-container {
   display: flex;
   align-items: center;
+}
+
+.info-icon {
+  font-size: 0.875rem; /* 14px */
+  color: #6b7280;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.info-icon:hover {
+  color: #111827;
 }
 
 .kpi-chart {

@@ -7,6 +7,7 @@ export const branchTabsData = {
       name: 'Shipments Planned',
       currentValue: '245',
       lastWeekValue: '228',
+      target: '230',
       lowerIsBetter: false,
       tooltip: {
         definition: 'Total number of shipments that have been planned for the current week.',
@@ -19,6 +20,7 @@ export const branchTabsData = {
       name: 'Shipments Not Planned',
       currentValue: '32',
       lastWeekValue: '45',
+      target: '25',
       lowerIsBetter: true,
       tooltip: {
         definition: 'Number of shipments that should be planned but are still pending.',
@@ -32,6 +34,7 @@ export const branchTabsData = {
       name: 'Planned on Time',
       currentValue: '88%',
       lastWeekValue: '82%',
+      target: '90%',
       lowerIsBetter: false,
       tooltip: {
         definition: 'Percentage of shipments that were planned within the required timeframe.',
@@ -44,6 +47,7 @@ export const branchTabsData = {
       name: 'Planning SLA Breached',
       currentValue: '18',
       lastWeekValue: '24',
+      target: '15',
       lowerIsBetter: true,
       tooltip: {
         definition: 'Number of shipments where planning was completed after the SLA deadline.',

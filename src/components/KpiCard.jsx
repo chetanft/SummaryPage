@@ -534,9 +534,41 @@ const KpiCard = ({ kpi, onClick }) => {
     }
   };
 
+  // Determine if value is above or below target
+  const isAboveTarget = () => {
+    if (!value || !target) return false;
+
+    // Extract numeric values
+    const valueNumeric = parseFloat(value.toString().replace(/[^0-9.-]+/g, ''));
+    const targetNumeric = parseFloat(target.toString().replace(/[^0-9.-]+/g, ''));
+
+    if (isNaN(valueNumeric) || isNaN(targetNumeric)) return false;
+
+    return valueNumeric >= targetNumeric;
+  };
+
+  const isBelowTarget = () => {
+    if (!value || !target) return false;
+
+    // Extract numeric values
+    const valueNumeric = parseFloat(value.toString().replace(/[^0-9.-]+/g, ''));
+    const targetNumeric = parseFloat(target.toString().replace(/[^0-9.-]+/g, ''));
+
+    if (isNaN(valueNumeric) || isNaN(targetNumeric)) return false;
+
+    return valueNumeric < targetNumeric;
+  };
+
+  // Determine the appropriate class based on target comparison
+  const getTargetComparisonClass = () => {
+    if (isAboveTarget()) return 'above-target';
+    if (isBelowTarget()) return 'below-target';
+    return '';
+  };
+
   return (
     <div
-      className={`kpi-card tile-${tileSize}`}
+      className={`kpi-card tile-${tileSize} ${getTargetComparisonClass()}`}
       onClick={() => onClick(kpi)}
     >
       <div className="kpi-header">

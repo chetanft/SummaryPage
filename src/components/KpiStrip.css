@@ -7,11 +7,17 @@
   border: 1px solid #e5e7eb;
   border-radius: 8px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05); /* Match KpiCard shadow */
-  padding: 1rem; /* Match KpiCard padding */
+  padding: 1.25rem; /* Match KpiCard padding */
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
   margin: 0; /* Remove any margin that might affect alignment */
+  gap: 0.75rem;
+  transition: background-color 0.2s ease;
+}
+
+.kpi-strip-item:hover {
+  background-color: #f9fafb;
 }
 
 .kpi-strip-header {
@@ -20,12 +26,13 @@
 
 .kpi-strip-header h4 {
   margin: 0;
-  font-size: 0.75rem; /* 12px */
-  font-weight: 500;
-  color: #374151;
+  font-size: 1.125rem; /* 18px */
+  font-weight: 600;
+  color: #111827;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  line-height: 1.4;
 }
 
 .kpi-strip-content {
@@ -42,15 +49,37 @@
 }
 
 .kpi-strip-value {
-  font-size: 1.125rem; /* 18px */
-  font-weight: 600;
+  font-size: 2rem; /* 32px */
+  font-weight: 700;
   text-align: left;
+  color: #374151; /* Neutral color - will be overridden */
+}
+
+.above-target .kpi-strip-value {
+  color: #10b981; /* Emerald Green for above target */
+}
+
+.below-target .kpi-strip-value {
+  color: #ef4444; /* Rose Red for below target */
 }
 
 .kpi-strip-target {
-  font-size: 0.6875rem; /* 11px */
+  font-size: 0.875rem; /* 14px */
   color: #6b7280;
   text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.kpi-strip-target-label {
+  font-weight: 400;
+}
+
+.kpi-strip-target-value {
+  font-size: 1.125rem; /* 18px */
+  font-weight: 600;
+  color: #1f2937;
 }
 
 .sparkline-container {
