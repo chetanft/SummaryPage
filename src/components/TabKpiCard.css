@@ -105,40 +105,46 @@
   color: #ef4444; /* Rose Red for below target */
 }
 
-.target-value {
+.kpi-meta-row {
   display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  font-size: 0.875rem; /* 14px */
-  margin-bottom: 0.25rem;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-top: 0.5rem;
+  gap: 1rem;
 }
 
-.target-label {
-  color: #6b7280;
-  font-weight: 400;
-}
-
-.target-value-number {
-  font-size: 1.125rem; /* 18px */
-  font-weight: 600;
-  color: #1f2937;
-}
-
+.target,
 .last-week {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
   font-size: 0.875rem; /* 14px */
+  color: #6b7280;
+  font-weight: 500;
+  display: flex;
+  gap: 0.25rem;
 }
 
+.target-label,
 .last-week-label {
   color: #6b7280;
   font-weight: 400;
 }
 
+.target-value-number {
+  font-size: 0.875rem; /* 14px */
+  font-weight: 600;
+  color: #1f2937;
+}
+
 .last-week-value {
   color: #6b7280;
   font-weight: 500;
+}
+
+/* Responsive adjustment for small screens */
+@media (max-width: 480px) {
+  .kpi-meta-row {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
 }
 
 .trend-indicator {

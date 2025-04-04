@@ -126,13 +126,15 @@ const TabKpiCard = ({ kpi }) => {
         {kpi.currentValue ? (
           <>
             <div className="current-value">{kpi.currentValue}</div>
-            <div className="target-value">
-              <span className="target-label">Target:</span>
-              <span className="target-value-number">{kpi.target || 'N/A'}</span>
-            </div>
-            <div className="last-week">
-              <span className="last-week-label">Last Week:</span>
-              <span className="last-week-value">{kpi.lastWeekValue || 'N/A'}</span>
+            <div className="kpi-meta-row">
+              <div className="target">
+                <span className="target-label">Target:</span>
+                <span className="target-value-number">{kpi.target || 'N/A'}</span>
+              </div>
+              <div className="last-week">
+                <span className="last-week-label">Last Week:</span>
+                <span className="last-week-value">{kpi.lastWeekValue || 'N/A'}</span>
+              </div>
             </div>
             {calculateTrendPercentage() !== 0 && (
               <div className="trend-indicator">
