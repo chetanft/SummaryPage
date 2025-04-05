@@ -7,7 +7,7 @@
   background: var(--color-bg-primary);
   border-radius: 8px;
   border: 1px solid var(--color-border);
-  min-height: 130px;
+  min-height: 120px;
   box-shadow: 0px 2px 6px var(--color-shadow);
   box-sizing: border-box;
   margin: 0;
@@ -45,6 +45,16 @@
   line-height: 1.4;
 }
 
+/* KPI value row for horizontal layout */
+.kpi-value-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  width: 100%;
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+
 /* KPI value styling */
 .kpi-value {
   font-size: 1.75rem; /* 28px */
@@ -55,19 +65,22 @@
 /* Target styling */
 .kpi-target {
   display: flex;
-  align-items: center;
-  gap: 0.25rem;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.125rem;
   font-size: 0.875rem; /* 14px */
   color: var(--color-text-tertiary);
+  text-align: right;
 }
 
 .kpi-target-label {
   color: var(--color-text-tertiary);
   font-weight: 400;
+  font-size: 0.75rem; /* 12px */
 }
 
 .kpi-target-value {
-  font-size: 0.875rem; /* 14px */
+  font-size: 1rem; /* 16px */
   font-weight: 600;
   color: var(--color-text-primary);
 }

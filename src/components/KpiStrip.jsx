@@ -151,12 +151,14 @@ const KpiStrip = ({ kpis }) => {
         <div key={kpi.id} className={`kpi-strip-item ${getTargetComparisonClass(kpi)}`}>
           <div className="kpi-content">
             <h4 className="kpi-title">{kpi.name}</h4>
-            <div className="kpi-value">
-              {kpi.value}
-            </div>
-            <div className="kpi-target">
-              <span className="kpi-target-label">Target:</span>
-              <span className="kpi-target-value">{kpi.target}</span>
+            <div className="kpi-value-row">
+              <div className="kpi-value">
+                {kpi.value}
+              </div>
+              <div className="kpi-target">
+                <span className="kpi-target-label">Target</span>
+                <span className="kpi-target-value">{kpi.target}</span>
+              </div>
             </div>
           </div>
           <div className="kpi-chart-header">
