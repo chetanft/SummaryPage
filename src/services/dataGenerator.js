@@ -14,34 +14,34 @@ const randomPercentage = (base, variance) => {
 // Helper function to generate time values (in hours)
 const randomTime = (base, variance) => {
   const change = (Math.random() * variance * 2) - variance;
-  return Math.max(0.5, (base + change).toFixed(1));
+  return Math.max(0.5, (base + change).toFixed(2));
 };
 
 // Helper function to generate trend data (last 7 days)
 const generateTrendData = (current, min, max, isPercentage = false) => {
   const data = [];
   let value = current;
-  
+
   // Generate data for the past 7 days (going backwards)
   for (let i = 0; i < 7; i++) {
     // Add some randomness to create realistic variations
     const variance = isPercentage ? 5 : (max - min) * 0.1;
     const change = (Math.random() * variance * 2) - variance;
-    
+
     // Ensure the value stays within the specified range
     value = Math.max(min, Math.min(max, value + change));
-    
+
     // For percentages, ensure we don't exceed 100%
     if (isPercentage) {
       value = Math.min(100, Math.max(0, value));
     }
-    
+
     // Round to appropriate precision
-    const roundedValue = isPercentage ? Math.round(value) : Number(value.toFixed(1));
-    
+    const roundedValue = isPercentage ? Math.round(value) : Number(value.toFixed(2));
+
     data.unshift(roundedValue); // Add to the beginning to have oldest data first
   }
-  
+
   return data;
 };
 
@@ -49,7 +49,7 @@ const generateTrendData = (current, min, max, isPercentage = false) => {
 const generateChartData = (kpi) => {
   const isPercentage = kpi.value.toString().includes('%');
   const numericValue = parseFloat(kpi.value.toString().replace(/[^0-9.-]+/g, ''));
-  
+
   let min, max;
   if (isPercentage) {
     min = Math.max(0, numericValue - 20);
@@ -58,9 +58,9 @@ const generateChartData = (kpi) => {
     min = Math.max(0, numericValue * 0.7);
     max = numericValue * 1.3;
   }
-  
+
   const data = generateTrendData(numericValue, min, max, isPercentage);
-  
+
   return {
     labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Day 7'],
     datasets: [
@@ -75,70 +75,256 @@ const generateChartData = (kpi) => {
 
 // Generate random data for all KPIs
 export const generateRandomData = () => {
-  // Generate important KPIs data
+  // Generate important KPIs data for all personas
+  // CXO Level KPIs
+  const revenueCr = (randomInRange(120, 150) / 10).toFixed(2);
+  const profitCr = (randomInRange(18, 25) / 10).toFixed(2);
+  const orderToDelivery = randomTime(4.2, 0.3);
+  const freightCostTrends = randomPercentage(12, 2).toFixed(2);
+  const tripCount = randomInRange(1800, 2200);
+  const carbonEmissions = randomInRange(450, 550);
+
+  // Company Level KPIs
+  const orderExecutionTime = randomTime(5.8, 0.5);
+  const vehicleUtilization = randomPercentage(76, 4).toFixed(2);
+  const transitTime = randomTime(3.2, 0.4);
+  const unloadingTurnaround = randomTime(4.5, 0.6);
+  const freightCosts = (randomInRange(120, 150) / 10).toFixed(2);
+  const weightVolumeMetrics = randomPercentage(82, 3).toFixed(2);
+
+  // Branch Level KPIs
   const unloadingTime = randomTime(2.5, 0.5);
   const cleanPOD = randomPercentage(82, 5);
   const placementEfficiency = randomPercentage(78, 5);
   const salesOrders = randomInRange(420, 480);
-  
+  const statusFlow = randomPercentage(85, 4).toFixed(2);
+  const realTimeTrips = randomInRange(85, 95);
+  const transitTimeMonitoring = randomTime(2.8, 0.3);
+  const branchCleanPod = randomPercentage(88, 3).toFixed(2);
+  const invoiceSubmission = randomPercentage(92, 2).toFixed(2);
+
   // Generate operational metrics data for Planning tab
   const shipmentsPlanned = randomInRange(230, 260);
   const shipmentsNotPlanned = randomInRange(25, 40);
   const plannedOnTime = randomPercentage(88, 3);
   const planningSLABreached = randomInRange(15, 25);
-  
+
   // Generate operational metrics data for Indent tab
   const indentsPublished = randomInRange(165, 190);
   const indentsAccepted = randomInRange(140, 165);
-  
+
   // Generate operational metrics data for FTL tab
   const tripsStarted = randomInRange(110, 125);
   const tripsNotStarted = randomInRange(10, 20);
   const onTimeTrips = randomPercentage(78, 5);
   const trucksArrivingToday = randomInRange(22, 32);
-  
+
   // Generate operational metrics data for PTL tab
   const ordersGenerated = randomInRange(310, 340);
   const ordersAssigned = randomInRange(285, 310);
   const ordersPickedUp = randomInRange(260, 290);
   const delayedDeliveries = randomInRange(28, 38);
-  
+
   // Generate operational metrics data for Freight Invoicing tab
   const invoicesRaised = randomInRange(135, 150);
   const invoicesApproved = randomInRange(120, 135);
   const invoiceApprovalTime = randomTime(2.8, 0.3);
   const rejectedInvoices = randomInRange(5, 12);
-  
+
   // Create the data object
   const data = {
-    importantKpis: [
+    // Organize KPIs by persona
+    cxoKpis: [
+      {
+        id: 'revenueProfitTrends',
+        name: 'Revenue & Profit Trends',
+        value: `₹${revenueCr}Cr`,
+        target: '₹15.0Cr',
+        lowerIsBetter: false,
+        tileSize: '2x2'
+      },
+      {
+        id: 'orderToDelivery',
+        name: 'Order to Delivery (OTD)',
+        value: `${orderToDelivery} days`,
+        target: '3.5 days',
+        lowerIsBetter: true,
+        tileSize: '2x1'
+      },
+      {
+        id: 'freightCostTrends',
+        name: 'Freight Cost (% of Revenue)',
+        value: `${freightCostTrends}%`,
+        target: '10.0%',
+        lowerIsBetter: true,
+        tileSize: '1x1'
+      },
+      {
+        id: 'tripCount',
+        name: 'Trip Count',
+        value: tripCount.toString(),
+        target: '2000',
+        lowerIsBetter: false,
+        tileSize: '1x1'
+      },
+      {
+        id: 'carbonEmissions',
+        name: 'Carbon Emissions (tons)',
+        value: carbonEmissions.toString(),
+        target: '500',
+        lowerIsBetter: true,
+        tileSize: '1x1'
+      }
+    ],
+    companyKpis: [
+      {
+        id: 'orderExecutionTime',
+        name: 'Order Execution Time',
+        value: `${orderExecutionTime} days`,
+        target: '5.0 days',
+        lowerIsBetter: true,
+        tileSize: '2x1'
+      },
+      {
+        id: 'vehicleUtilization',
+        name: 'Vehicle Utilization',
+        value: `${vehicleUtilization}%`,
+        target: '80.0%',
+        lowerIsBetter: false,
+        tileSize: '1x1'
+      },
+      {
+        id: 'transitTime',
+        name: 'Transit Time',
+        value: `${transitTime} days`,
+        target: '3.0 days',
+        lowerIsBetter: true,
+        tileSize: '1x1'
+      },
+      {
+        id: 'unloadingTurnaround',
+        name: 'Unloading Turnaround',
+        value: `${unloadingTurnaround} hrs`,
+        target: '4.0 hrs',
+        lowerIsBetter: true,
+        tileSize: '1x1'
+      },
+      {
+        id: 'freightCosts',
+        name: 'Freight Costs (Lakhs)',
+        value: `₹${freightCosts}L`,
+        target: '₹12.0L',
+        lowerIsBetter: true,
+        tileSize: '1x1'
+      },
+      {
+        id: 'weightVolumeMetrics',
+        name: 'Weight/Volume Utilization',
+        value: `${weightVolumeMetrics}%`,
+        target: '85.0%',
+        lowerIsBetter: false,
+        tileSize: '1x1'
+      }
+    ],
+    branchKpis: [
       {
         id: 'unloadingTime',
         name: 'Unloading Time',
         value: `${unloadingTime} hrs`,
         target: '2.0 hrs',
-        lowerIsBetter: true
+        lowerIsBetter: true,
+        tileSize: '1x1'
       },
       {
         id: 'cleanPOD',
         name: 'Clean POD',
         value: `${cleanPOD}%`,
         target: '90%',
-        lowerIsBetter: false
+        lowerIsBetter: false,
+        tileSize: '1x1'
       },
       {
         id: 'placementEfficiency',
         name: 'Placement Efficiency',
         value: `${placementEfficiency}%`,
         target: '85%',
-        lowerIsBetter: false
+        lowerIsBetter: false,
+        tileSize: '1x1'
       },
       {
         id: 'salesOrders',
         name: 'Sales Orders',
         value: salesOrders.toString(),
         target: '500',
-        lowerIsBetter: false
+        lowerIsBetter: false,
+        tileSize: '1x1'
+      },
+      {
+        id: 'statusFlow',
+        name: 'Status Flow Compliance',
+        value: `${statusFlow}%`,
+        target: '90.0%',
+        lowerIsBetter: false,
+        tileSize: '1x1'
+      },
+      {
+        id: 'realTimeTrips',
+        name: 'Real-Time Trip Updates',
+        value: realTimeTrips.toString(),
+        target: '90',
+        lowerIsBetter: false,
+        tileSize: '1x1'
+      },
+      {
+        id: 'transitTimeMonitoring',
+        name: 'Transit Time Monitoring',
+        value: `${transitTimeMonitoring} hrs`,
+        target: '2.5 hrs',
+        lowerIsBetter: true,
+        tileSize: '1x1'
+      },
+      {
+        id: 'branchCleanPod',
+        name: 'Branch Clean POD %',
+        value: `${branchCleanPod}%`,
+        target: '90.0%',
+        lowerIsBetter: false,
+        tileSize: '1x1'
+      }
+    ],
+    // For backward compatibility, keep the importantKpis array with the current persona's KPIs
+    importantKpis: [
+      {
+        id: 'unloadingTime',
+        name: 'Unloading Time',
+        value: `${unloadingTime} hrs`,
+        target: '2.0 hrs',
+        lowerIsBetter: true,
+        tileSize: '1x1'
+      },
+      {
+        id: 'cleanPOD',
+        name: 'Clean POD',
+        value: `${cleanPOD}%`,
+        target: '90%',
+        lowerIsBetter: false,
+        tileSize: '1x1'
+      },
+      {
+        id: 'placementEfficiency',
+        name: 'Placement Efficiency',
+        value: `${placementEfficiency}%`,
+        target: '85%',
+        lowerIsBetter: false,
+        tileSize: '1x1'
+      },
+      {
+        id: 'salesOrders',
+        name: 'Sales Orders',
+        value: salesOrders.toString(),
+        target: '500',
+        lowerIsBetter: false,
+        tileSize: '1x1'
       }
     ],
     operationalMetrics: {
@@ -298,12 +484,16 @@ export const generateRandomData = () => {
       ]
     }
   };
-  
-  // Generate chart data for each KPI
-  data.importantKpis.forEach(kpi => {
-    kpi.chartData = generateChartData(kpi);
+
+  // Generate chart data for each KPI in all persona arrays
+  ['cxoKpis', 'companyKpis', 'branchKpis', 'importantKpis'].forEach(personaArray => {
+    if (data[personaArray]) {
+      data[personaArray].forEach(kpi => {
+        kpi.chartData = generateChartData(kpi);
+      });
+    }
   });
-  
+
   // Generate chart data for operational metrics
   Object.keys(data.operationalMetrics).forEach(tab => {
     data.operationalMetrics[tab].forEach(kpi => {
@@ -314,6 +504,6 @@ export const generateRandomData = () => {
       });
     });
   });
-  
+
   return data;
 };

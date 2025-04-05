@@ -142,6 +142,17 @@
   overflow: hidden;
 }
 
+/* No chart data message */
+.no-chart-data {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  color: var(--color-text-tertiary);
+  font-size: 0.875rem;
+  font-style: italic;
+}
+
 /* Tile size classes */
 .tile-2x2 {
   grid-column: span 2;

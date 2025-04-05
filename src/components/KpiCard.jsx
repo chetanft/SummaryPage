@@ -64,6 +64,11 @@ const KpiCard = ({ kpi, onClick }) => {
   };
 
   const renderChart = () => {
+    // Check if chartData exists
+    if (!chartData || !chartData.datasets) {
+      return <div className="no-chart-data">No chart data available</div>;
+    }
+
     const options = {
       responsive: true,
       maintainAspectRatio: false,
