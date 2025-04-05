@@ -70,8 +70,11 @@ const KpiCard = ({ kpi, onClick }) => {
       return <div className="no-chart-data">No chart data available</div>;
     }
 
-    // Log chart data for debugging
-    console.log('Chart data for KPI:', name, chartData);
+    // Ensure datasets has data
+    if (!chartData.datasets[0] || !chartData.datasets[0].data || chartData.datasets[0].data.length === 0) {
+      console.log('Chart data has empty datasets for KPI:', name);
+      return <div className="no-chart-data">No chart data available</div>;
+    }
 
     const options = {
       responsive: true,
@@ -610,9 +613,9 @@ const KpiCard = ({ kpi, onClick }) => {
       <div className="kpi-chart" style={{
         height: tileSize === '2x2' ? '250px' :
                tileSize === '2x1' ? '180px' :
-               tileSize === '1x2' ? '250px' : '150px'
+               tileSize === '1x2' ? '250px' : '160px'
       }}>
-        {renderChart()}
+        {chartData ? renderChart() : <div className="no-chart-data">No chart data available</div>}
       </div>
     </div>
   );

@@ -80,8 +80,13 @@ const generateChartData = (kpi) => {
   let valueStr = '';
   let targetStr = '';
 
+  // Handle complex values like "₹12.50Cr / ₹2.50Cr"
   if (kpi.value !== undefined) {
     valueStr = kpi.value.toString();
+    // If value contains multiple values (e.g., "₹12.50Cr / ₹2.50Cr"), use the first one
+    if (valueStr.includes('/')) {
+      valueStr = valueStr.split('/')[0].trim();
+    }
   } else if (kpi.currentValue !== undefined) {
     valueStr = kpi.currentValue.toString();
   } else {
@@ -91,11 +96,20 @@ const generateChartData = (kpi) => {
 
   if (kpi.target !== undefined) {
     targetStr = kpi.target.toString();
+    // If target contains multiple values, use the first one
+    if (targetStr.includes('/')) {
+      targetStr = targetStr.split('/')[0].trim();
+    }
   } else {
     console.warn('No target found for KPI:', kpi);
   }
 
+  // Determine if the value is a percentage, time, or currency
   const isPercentage = valueStr.includes('%');
+  const isTime = valueStr.includes('hrs') || valueStr.includes('days');
+  const isCurrency = valueStr.includes('₹') || valueStr.includes('$');
+
+  // Extract numeric value
   const numericValue = parseFloat(valueStr.replace(/[^0-9.-]+/g, ''));
 
   if (isNaN(numericValue)) {
@@ -103,11 +117,25 @@ const generateChartData = (kpi) => {
     return null;
   }
 
+  // Log the extracted value for debugging
+  console.log(`Extracted value for ${kpi.name}: ${numericValue} (from ${valueStr})`);
+  console.log(`Type: ${isPercentage ? 'Percentage' : isTime ? 'Time' : isCurrency ? 'Currency' : 'Number'}`);
+
   let min, max;
   if (isPercentage) {
+    // For percentages, stay within 0-100% range
     min = Math.max(0, numericValue - 20);
     max = Math.min(100, numericValue + 20);
+  } else if (isTime) {
+    // For time values, use smaller variance
+    min = Math.max(0, numericValue * 0.8);
+    max = numericValue * 1.2;
+  } else if (isCurrency) {
+    // For currency values, use moderate variance
+    min = Math.max(0, numericValue * 0.75);
+    max = numericValue * 1.25;
   } else {
+    // For other numeric values, use standard variance
     min = Math.max(0, numericValue * 0.7);
     max = numericValue * 1.3;
   }
