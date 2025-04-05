@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import './BranchTabs.css';
 import TabKpiCard from './TabKpiCard';
-import { branchTabsData } from '../data/branchTabsData';
 
-const BranchTabs = () => {
+const BranchTabs = ({ operationalMetrics }) => {
   const [activeTab, setActiveTab] = useState('planning');
 
   const tabs = [
@@ -35,7 +34,7 @@ const BranchTabs = () => {
 
       <div className="tab-content">
         <div className="tab-kpi-grid">
-          {branchTabsData[activeTab].map(kpi => (
+          {operationalMetrics && operationalMetrics[activeTab] && operationalMetrics[activeTab].map(kpi => (
             <div key={kpi.id} className="tab-kpi-item">
               <TabKpiCard kpi={kpi} />
             </div>
