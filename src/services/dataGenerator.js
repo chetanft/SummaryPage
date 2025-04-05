@@ -76,8 +76,32 @@ const generateSixMonthsTrendData = (current, min, max, isPercentage = false, tre
 
 // Generate chart data for a KPI
 const generateChartData = (kpi) => {
-  const isPercentage = kpi.value.toString().includes('%');
-  const numericValue = parseFloat(kpi.value.toString().replace(/[^0-9.-]+/g, ''));
+  // Extract the value for chart generation
+  let valueStr = '';
+  let targetStr = '';
+
+  if (kpi.value !== undefined) {
+    valueStr = kpi.value.toString();
+  } else if (kpi.currentValue !== undefined) {
+    valueStr = kpi.currentValue.toString();
+  } else {
+    console.error('No value found for KPI:', kpi);
+    return null;
+  }
+
+  if (kpi.target !== undefined) {
+    targetStr = kpi.target.toString();
+  } else {
+    console.warn('No target found for KPI:', kpi);
+  }
+
+  const isPercentage = valueStr.includes('%');
+  const numericValue = parseFloat(valueStr.replace(/[^0-9.-]+/g, ''));
+
+  if (isNaN(numericValue)) {
+    console.error('Could not parse numeric value from:', valueStr);
+    return null;
+  }
 
   let min, max;
   if (isPercentage) {
@@ -548,11 +572,8 @@ export const generateRandomData = () => {
   // Generate chart data for operational metrics
   Object.keys(data.operationalMetrics).forEach(tab => {
     data.operationalMetrics[tab].forEach(kpi => {
-      kpi.chartData = generateChartData({
-        value: kpi.currentValue,
-        target: kpi.target,
-        lowerIsBetter: kpi.lowerIsBetter
-      });
+      // Pass the KPI directly to generateChartData
+      kpi.chartData = generateChartData(kpi);
     });
   });
 

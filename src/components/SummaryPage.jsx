@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import './SummaryPage.css';
 import KpiCard from './KpiCard';
 import KpiStrip from './KpiStrip';
@@ -14,6 +14,15 @@ const SummaryPage = () => {
 
   // Get data from DataContext
   const { data, loading } = useContext(DataContext);
+
+  // Log data for debugging
+  useEffect(() => {
+    if (data) {
+      console.log('Data loaded:', data);
+      console.log(`Selected persona: ${selectedPersona}`);
+      console.log(`KPIs for ${selectedPersona}:`, data[`${selectedPersona}Kpis`]);
+    }
+  }, [data, selectedPersona]);
 
   const handlePersonaChange = (e) => {
     setSelectedPersona(e.target.value);
@@ -68,7 +77,7 @@ const SummaryPage = () => {
           {loading ? (
             <div className="loading-indicator">Loading data...</div>
           ) : (
-            data && data.importantKpis.map(kpi => (
+            data && data[`${selectedPersona}Kpis`] && data[`${selectedPersona}Kpis`].map(kpi => (
               <div key={kpi.id} className={`tile-${kpi.tileSize || '1x1'}`}>
                 <KpiCard
                   kpi={kpi}
@@ -84,7 +93,7 @@ const SummaryPage = () => {
           {loading ? (
             <div className="loading-indicator">Loading data...</div>
           ) : (
-            data && <KpiStrip kpis={data.importantKpis} />
+            data && data[`${selectedPersona}Kpis`] && <KpiStrip kpis={data[`${selectedPersona}Kpis`]} />
           )}
         </section>
       </main>

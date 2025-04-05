@@ -66,8 +66,12 @@ const KpiCard = ({ kpi, onClick }) => {
   const renderChart = () => {
     // Check if chartData exists
     if (!chartData || !chartData.datasets) {
+      console.log('No chart data available for KPI:', name);
       return <div className="no-chart-data">No chart data available</div>;
     }
+
+    // Log chart data for debugging
+    console.log('Chart data for KPI:', name, chartData);
 
     const options = {
       responsive: true,
