@@ -17,16 +17,43 @@ const randomTime = (base, variance) => {
   return Math.max(0.5, (base + change).toFixed(2));
 };
 
-// Helper function to generate trend data (last 7 days)
-const generateTrendData = (current, min, max, isPercentage = false) => {
+// Helper function to generate month names for the last 6 months
+const generateLastSixMonths = () => {
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const today = new Date();
+  const result = [];
+
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date(today);
+    d.setMonth(today.getMonth() - i);
+    result.push(months[d.getMonth()]);
+  }
+
+  return result;
+};
+
+// Helper function to generate six months of trend data
+const generateSixMonthsTrendData = (current, min, max, isPercentage = false, trend = 'random') => {
   const data = [];
   let value = current;
 
-  // Generate data for the past 7 days (going backwards)
-  for (let i = 0; i < 7; i++) {
+  // Generate data for the past 6 months (going backwards)
+  for (let i = 0; i < 6; i++) {
     // Add some randomness to create realistic variations
-    const variance = isPercentage ? 5 : (max - min) * 0.1;
-    const change = (Math.random() * variance * 2) - variance;
+    let variance = isPercentage ? 5 : (max - min) * 0.1;
+
+    // Adjust variance based on trend direction
+    let change;
+    if (trend === 'up') {
+      // For upward trend, bias towards positive changes
+      change = (Math.random() * variance * 1.5) - (variance * 0.5);
+    } else if (trend === 'down') {
+      // For downward trend, bias towards negative changes
+      change = (Math.random() * variance * 1.5) - (variance * 1.0);
+    } else {
+      // For random trend, use unbiased changes
+      change = (Math.random() * variance * 2) - variance;
+    }
 
     // Ensure the value stays within the specified range
     value = Math.max(min, Math.min(max, value + change));
@@ -37,13 +64,15 @@ const generateTrendData = (current, min, max, isPercentage = false) => {
     }
 
     // Round to appropriate precision
-    const roundedValue = isPercentage ? Math.round(value) : Number(value.toFixed(2));
+    const roundedValue = isPercentage ? Number(value.toFixed(2)) : Number(value.toFixed(2));
 
-    data.unshift(roundedValue); // Add to the beginning to have oldest data first
+    data.push(roundedValue); // Add to the end to have newest data last
   }
 
   return data;
 };
+
+
 
 // Generate chart data for a KPI
 const generateChartData = (kpi) => {
@@ -59,10 +88,24 @@ const generateChartData = (kpi) => {
     max = numericValue * 1.3;
   }
 
-  const data = generateTrendData(numericValue, min, max, isPercentage);
+  // Determine trend direction based on KPI properties
+  let trendDirection = 'random';
+  if (kpi.lowerIsBetter) {
+    // For KPIs where lower is better, we want to show improvement (downward trend)
+    trendDirection = 'down';
+  } else {
+    // For KPIs where higher is better, we want to show improvement (upward trend)
+    trendDirection = 'up';
+  }
+
+  // Generate six months of data
+  const data = generateSixMonthsTrendData(numericValue, min, max, isPercentage, trendDirection);
+
+  // Generate month labels
+  const monthLabels = generateLastSixMonths();
 
   return {
-    labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Day 7'],
+    labels: monthLabels,
     datasets: [
       {
         data: data,
@@ -81,8 +124,8 @@ export const generateRandomData = () => {
   const profitCr = (randomInRange(18, 25) / 10).toFixed(2);
   const orderToDelivery = randomTime(4.2, 0.3);
   const freightCostTrends = randomPercentage(12, 2).toFixed(2);
-  const tripCount = randomInRange(1800, 2200);
-  const carbonEmissions = randomInRange(450, 550);
+  const tripCount = randomInRange(1800, 2200).toFixed(0);
+  const carbonEmissions = randomInRange(450, 550).toFixed(0);
 
   // Company Level KPIs
   const orderExecutionTime = randomTime(5.8, 0.5);
@@ -94,42 +137,42 @@ export const generateRandomData = () => {
 
   // Branch Level KPIs
   const unloadingTime = randomTime(2.5, 0.5);
-  const cleanPOD = randomPercentage(82, 5);
-  const placementEfficiency = randomPercentage(78, 5);
-  const salesOrders = randomInRange(420, 480);
+  const cleanPOD = randomPercentage(82, 5).toFixed(2);
+  const placementEfficiency = randomPercentage(78, 5).toFixed(2);
+  const salesOrders = randomInRange(420, 480).toFixed(0);
   const statusFlow = randomPercentage(85, 4).toFixed(2);
-  const realTimeTrips = randomInRange(85, 95);
+  const realTimeTrips = randomInRange(85, 95).toFixed(0);
   const transitTimeMonitoring = randomTime(2.8, 0.3);
   const branchCleanPod = randomPercentage(88, 3).toFixed(2);
   const invoiceSubmission = randomPercentage(92, 2).toFixed(2);
 
   // Generate operational metrics data for Planning tab
-  const shipmentsPlanned = randomInRange(230, 260);
-  const shipmentsNotPlanned = randomInRange(25, 40);
-  const plannedOnTime = randomPercentage(88, 3);
-  const planningSLABreached = randomInRange(15, 25);
+  const shipmentsPlanned = randomInRange(230, 260).toFixed(0);
+  const shipmentsNotPlanned = randomInRange(25, 40).toFixed(0);
+  const plannedOnTime = randomPercentage(88, 3).toFixed(2);
+  const planningSLABreached = randomInRange(15, 25).toFixed(0);
 
   // Generate operational metrics data for Indent tab
-  const indentsPublished = randomInRange(165, 190);
-  const indentsAccepted = randomInRange(140, 165);
+  const indentsPublished = randomInRange(165, 190).toFixed(0);
+  const indentsAccepted = randomInRange(140, 165).toFixed(0);
 
   // Generate operational metrics data for FTL tab
-  const tripsStarted = randomInRange(110, 125);
-  const tripsNotStarted = randomInRange(10, 20);
-  const onTimeTrips = randomPercentage(78, 5);
-  const trucksArrivingToday = randomInRange(22, 32);
+  const tripsStarted = randomInRange(110, 125).toFixed(0);
+  const tripsNotStarted = randomInRange(10, 20).toFixed(0);
+  const onTimeTrips = randomPercentage(78, 5).toFixed(2);
+  const trucksArrivingToday = randomInRange(22, 32).toFixed(0);
 
   // Generate operational metrics data for PTL tab
-  const ordersGenerated = randomInRange(310, 340);
-  const ordersAssigned = randomInRange(285, 310);
-  const ordersPickedUp = randomInRange(260, 290);
-  const delayedDeliveries = randomInRange(28, 38);
+  const ordersGenerated = randomInRange(310, 340).toFixed(0);
+  const ordersAssigned = randomInRange(285, 310).toFixed(0);
+  const ordersPickedUp = randomInRange(260, 290).toFixed(0);
+  const delayedDeliveries = randomInRange(28, 38).toFixed(0);
 
   // Generate operational metrics data for Freight Invoicing tab
-  const invoicesRaised = randomInRange(135, 150);
-  const invoicesApproved = randomInRange(120, 135);
+  const invoicesRaised = randomInRange(135, 150).toFixed(0);
+  const invoicesApproved = randomInRange(120, 135).toFixed(0);
   const invoiceApprovalTime = randomTime(2.8, 0.3);
-  const rejectedInvoices = randomInRange(5, 12);
+  const rejectedInvoices = randomInRange(5, 12).toFixed(0);
 
   // Create the data object
   const data = {
@@ -138,8 +181,8 @@ export const generateRandomData = () => {
       {
         id: 'revenueProfitTrends',
         name: 'Revenue & Profit Trends',
-        value: `₹${revenueCr}Cr`,
-        target: '₹15.0Cr',
+        value: `₹${revenueCr}Cr / ₹${profitCr}Cr`,
+        target: '₹15.0Cr / ₹2.5Cr',
         lowerIsBetter: false,
         tileSize: '2x2'
       },
@@ -288,6 +331,14 @@ export const generateRandomData = () => {
         name: 'Branch Clean POD %',
         value: `${branchCleanPod}%`,
         target: '90.0%',
+        lowerIsBetter: false,
+        tileSize: '1x1'
+      },
+      {
+        id: 'invoiceSubmission',
+        name: 'Invoice Submission Rate',
+        value: `${invoiceSubmission}%`,
+        target: '95.0%',
         lowerIsBetter: false,
         tileSize: '1x1'
       }
