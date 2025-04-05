@@ -1,0 +1,50 @@
+.theme-toggle-btn {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  border: 2px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 1000;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px var(--color-shadow);
+}
+
+.theme-toggle-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px var(--color-shadow-hover);
+}
+
+.theme-toggle-btn svg {
+  font-size: 1.5rem;
+}
+
+/* Tooltip styles */
+.theme-toggle-tooltip {
+  position: absolute;
+  top: 110%;
+  right: 0;
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px var(--color-shadow);
+  border: 1px solid var(--color-border);
+  z-index: 1001;
+}
+
+/* Dark mode styles */
+.dark .theme-toggle-btn {
+  background-color: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+  border-color: var(--color-border);
+}

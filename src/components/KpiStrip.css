@@ -4,18 +4,18 @@
   flex-direction: column;
   justify-content: space-between;
   padding: 1rem;
-  background: #ffffff;
+  background: var(--color-bg-primary);
   border-radius: 8px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--color-border);
   min-height: 130px;
-  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.05);
+  box-shadow: 0px 2px 6px var(--color-shadow);
   box-sizing: border-box;
   margin: 0;
   transition: background-color 0.2s ease;
 }
 
 .kpi-strip-item:hover {
-  background-color: #f9fafb;
+  background-color: var(--color-bg-secondary);
 }
 
 /* Content section for text */
@@ -38,7 +38,7 @@
   margin: 0;
   font-size: 1rem; /* 16px */
   font-weight: 600;
-  color: #111827;
+  color: var(--color-text-primary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -49,7 +49,7 @@
 .kpi-value {
   font-size: 1.75rem; /* 28px */
   font-weight: 700;
-  color: #374151; /* Neutral color - will be overridden */
+  color: var(--color-text-secondary); /* Neutral color - will be overridden */
 }
 
 /* Target styling */
@@ -58,27 +58,27 @@
   align-items: center;
   gap: 0.25rem;
   font-size: 0.875rem; /* 14px */
-  color: #6b7280;
+  color: var(--color-text-tertiary);
 }
 
 .kpi-target-label {
-  color: #6b7280;
+  color: var(--color-text-tertiary);
   font-weight: 400;
 }
 
 .kpi-target-value {
   font-size: 0.875rem; /* 14px */
   font-weight: 600;
-  color: #1f2937;
+  color: var(--color-text-primary);
 }
 
 /* Conditional styling based on target comparison */
 .above-target .kpi-value {
-  color: #10b981; /* Emerald Green for above target */
+  color: var(--color-success); /* Emerald Green for above target */
 }
 
 .below-target .kpi-value {
-  color: #ef4444; /* Rose Red for below target */
+  color: var(--color-error); /* Rose Red for below target */
 }
 
 /* Responsive adjustments are handled by the parent grid layout */

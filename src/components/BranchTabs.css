@@ -1,10 +1,10 @@
 .branch-tabs-container {
   margin-bottom: 1rem;
   margin-top: 0.5rem;
-  background-color: #f9fafb;
+  background-color: var(--color-bg-secondary);
   border-radius: 8px;
   padding: 1.5rem;
-  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.05);
+  box-shadow: 0px 1px 3px var(--color-shadow);
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
@@ -14,14 +14,14 @@
 .branch-tabs-title {
   font-size: 1.25rem;
   font-weight: 600;
-  color: #111827;
+  color: var(--color-text-primary);
   margin-top: 0;
   margin-bottom: 0.5rem;
 }
 
 .branch-tabs-description {
   font-size: 0.875rem;
-  color: #6b7280;
+  color: var(--color-text-tertiary);
   margin-top: 0;
   margin-bottom: 1.25rem;
   line-height: 1.5;
@@ -29,7 +29,7 @@
 
 .tabs-header {
   display: flex;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--color-border);
   margin-bottom: 1.5rem;
   overflow-x: auto;
   scrollbar-width: none; /* Firefox */
@@ -55,19 +55,19 @@
   border-bottom: 2px solid transparent;
   font-size: 0.875rem;
   font-weight: 500;
-  color: #6b7280;
+  color: var(--color-text-tertiary);
   cursor: pointer;
   transition: all 0.2s ease;
   white-space: nowrap;
 }
 
 .tab-button:hover {
-  color: #003c9b;
+  color: var(--color-info);
 }
 
 .tab-button.active {
-  color: #003c9b;
-  border-bottom: 2px solid #003c9b;
+  color: var(--color-info);
+  border-bottom: 2px solid var(--color-info);
 }
 
 .tab-content {
