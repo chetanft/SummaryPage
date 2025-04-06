@@ -208,28 +208,28 @@ const KpiCard = ({ kpi, onClick }) => {
     lineData.datasets = lineData.datasets.map((dataset, index) => {
       // Determine color based on KPI type
       let borderColor = '#003c9b'; // Default blue
-      let backgroundColor = 'rgba(0, 60, 155, 0.1)';
+      let backgroundColor = 'rgba(0, 60, 155, 0.15)';
 
       // For Revenue and Profit Trend KPI, use different colors for each line
       if (kpi.id === 'revenueProfitTrends') {
         if (index === 0) { // Revenue line
           borderColor = '#003c9b'; // Blue
-          backgroundColor = 'rgba(0, 60, 155, 0.1)';
+          backgroundColor = 'rgba(0, 60, 155, 0.15)';
         } else if (index === 1) { // Profit line
-          borderColor = '#04bc15'; // Green
-          backgroundColor = 'rgba(4, 188, 21, 0.1)';
+          borderColor = '#10b981'; // Green
+          backgroundColor = 'rgba(16, 185, 129, 0.15)';
         }
       } else {
         // Use green for KPIs where higher is better and value is above target
         if (!kpi.lowerIsBetter && isAboveTarget()) {
-          borderColor = '#04bc15'; // Green
-          backgroundColor = 'rgba(4, 188, 21, 0.1)';
+          borderColor = '#10b981'; // Green
+          backgroundColor = 'rgba(16, 185, 129, 0.15)';
         }
         // Use red for KPIs where lower is better and value is above target
         // or KPIs where higher is better and value is below target
         else if ((kpi.lowerIsBetter && isAboveTarget()) || (!kpi.lowerIsBetter && isBelowTarget())) {
-          borderColor = '#ff4d4f'; // Red
-          backgroundColor = 'rgba(255, 77, 79, 0.1)';
+          borderColor = '#ef4444'; // Red
+          backgroundColor = 'rgba(239, 68, 68, 0.15)';
         }
       }
 
@@ -238,38 +238,41 @@ const KpiCard = ({ kpi, onClick }) => {
         // Create segment styling for above/below target
         const segmentColors = dataset.data.map((value) => {
           if (kpi.lowerIsBetter) {
-            return value <= targetValue ? '#04bc15' : '#ff4d4f'; // Green if below target, red if above
+            return value <= targetValue ? '#10b981' : '#ef4444'; // Green if below target, red if above
           } else {
-            return value >= targetValue ? '#04bc15' : '#ff4d4f'; // Green if above target, red if below
+            return value >= targetValue ? '#10b981' : '#ef4444'; // Green if above target, red if below
           }
         });
 
-        // If we have different segment colors, use them
-        if (segmentColors.some(color => color !== segmentColors[0])) {
-          return {
-            ...dataset,
-            borderColor: segmentColors,
-            backgroundColor: segmentColors.map(color =>
-              color === '#04bc15' ? 'rgba(4, 188, 21, 0.1)' : 'rgba(255, 77, 79, 0.1)'
-            ),
-            borderWidth: 3,
-            pointRadius: 2,
-            pointHoverRadius: 5,
-            tension: 0.2,
-            fill: true
-          };
-        }
+        // Create segment background colors
+        const segmentBackgroundColors = segmentColors.map(color =>
+          color === '#10b981' ? 'rgba(16, 185, 129, 0.15)' : 'rgba(239, 68, 68, 0.15)'
+        );
+
+        // Always use segment colors for more accurate visualization
+        return {
+          ...dataset,
+          borderColor: segmentColors,
+          backgroundColor: segmentBackgroundColors,
+          borderWidth: 3,
+          pointRadius: 2,
+          pointHoverRadius: 5,
+          tension: 0.2,
+          fill: true
+        };
       }
 
       return {
         ...dataset,
         borderColor: borderColor,
         backgroundColor: backgroundColor,
-        borderWidth: 3, // Increased from 2 to 3
-        pointRadius: 2, // Changed from 0 to 2
-        pointHoverRadius: 5, // Increased from 4 to 5
-        tension: 0.2, // Reduced from 0.4 to 0.2 for more visible trends
-        fill: true // Ensure area below line is filled
+        borderWidth: 3,
+        pointRadius: 2,
+        pointHoverRadius: 5,
+        tension: 0.2,
+        fill: true,
+        borderCapStyle: 'round',
+        borderJoinStyle: 'round'
       };
     });
 
