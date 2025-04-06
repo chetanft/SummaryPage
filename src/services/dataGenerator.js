@@ -204,6 +204,7 @@ export const generateRandomData = () => {
   const materialInvoices = randomInRange(220, 280).toFixed(0);
   const freightInvoices = randomInRange(180, 220).toFixed(0);
   const companyTripCount = randomInRange(350, 450).toFixed(0);
+  const regionalPerformance = randomPercentage(83, 4).toFixed(2);
 
   // Branch Level KPIs
   const unloadingTime = randomTime(2.5, 0.5);
@@ -310,7 +311,7 @@ export const generateRandomData = () => {
       },
       {
         id: 'inboundFreightCost',
-        name: 'Inbound Freight Cost',
+        name: 'Inbound Freight Cost %',
         value: `${inboundFreightCost}%`,
         target: '5.5%',
         lowerIsBetter: true,
@@ -334,7 +335,7 @@ export const generateRandomData = () => {
       },
       {
         id: 'salesDeliveryOrders',
-        name: 'Sales & Delivery Orders',
+        name: 'Sales Orders',
         value: salesDeliveryOrders.toString(),
         target: '900',
         lowerIsBetter: false,
@@ -375,12 +376,12 @@ export const generateRandomData = () => {
         tileSize: '2x1'
       },
       {
-        id: 'weightVolumeMetrics',
-        name: 'Weight/Volume Utilization',
-        value: `${weightVolumeMetrics}%`,
+        id: 'regionalPerformance',
+        name: 'Regional Performance',
+        value: `${regionalPerformance}%`,
         target: '85.0%',
         lowerIsBetter: false,
-        tileSize: '1x1'
+        tileSize: '2x1'
       },
       {
         id: 'placementEfficiency',
@@ -542,7 +543,7 @@ export const generateRandomData = () => {
         value: `${branchOrderExecutionTime} days`,
         target: '5.0 days',
         lowerIsBetter: true,
-        tileSize: '1x1'
+        tileSize: '2x1'
       },
       {
         id: 'materialFreightInvoices',

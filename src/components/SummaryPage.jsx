@@ -9,9 +9,9 @@ import { DataContext } from '../context/DataContext';
 
 // Define which KPIs should be shown in the main grid (important KPIs)
 const mainKpiIds = {
-  cxo: ['revenueProfitTrends', 'orderToDelivery', 'freightCostPerKm', 'tripCount', 'carbonEmissions'],
-  company: ['orderExecutionTime', 'vehicleWeightVolumeUtilization', 'transitUnloadingTime', 'freightCostsPerUnit', 'weightVolumeMetrics'],
-  branch: ['unloadingTime', 'cleanPOD', 'placementEfficiency', 'salesOrders', 'statusFlow', 'realTimeTrips', 'branchVehicleUtilization', 'transitTimeMonitoring', 'branchCleanPod', 'invoiceSubmission']
+  cxo: ['revenueProfitTrends', 'orderToDelivery', 'freightCostPerKm', 'carbonEmissions'],
+  company: ['orderExecutionTime', 'cleanPODInvoices', 'freightCostsPerUnit', 'regionalPerformance'],
+  branch: ['statusFlow', 'transitTimeMonitoring', 'branchVehicleUtilization', 'branchOrderExecutionTime']
 };
 
 const SummaryPage = () => {

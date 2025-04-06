@@ -4,9 +4,9 @@ import './KpiStrip.css';
 
 // Define which KPIs should be shown in the strip (non-important KPIs)
 const stripKpiIds = {
-  cxo: ['otif', 'outboundFreightCost', 'inboundFreightCost', 'fuelEfficiency', 'vehicleUtilizationCXO', 'salesDeliveryOrders'],
-  company: ['placementEfficiency', 'cleanPODInvoices', 'costPercentSales', 'otherChargesBreakdown', 'invoiceSettlement', 'materialInvoices', 'freightInvoices', 'companyTripCount'],
-  branch: ['weightVolumeMetricsBranch', 'branchOrderExecutionTime', 'materialFreightInvoices']
+  cxo: ['fuelEfficiency', 'salesDeliveryOrders', 'tripCount', 'inboundFreightCost'],
+  company: ['otherChargesBreakdown', 'materialInvoices', 'freightInvoices', 'companyTripCount'],
+  branch: ['unloadingTime', 'cleanPOD', 'placementEfficiency', 'salesOrders']
 };
 
 const KpiStrip = ({ kpis, persona = 'cxo' }) => {
