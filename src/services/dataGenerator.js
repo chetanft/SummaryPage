@@ -32,6 +32,25 @@ const generateLastSixMonths = () => {
   return result;
 };
 
+// Helper function to generate month labels for the last n months
+const generateMonthLabels = (numMonths) => {
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const labels = [];
+
+  // Get current date
+  const now = new Date();
+  const currentMonth = now.getMonth();
+
+  // Generate labels for the last numMonths months
+  for (let i = numMonths - 1; i >= 0; i--) {
+    // Calculate month index (handling wrapping around to previous year)
+    const monthIndex = (currentMonth - i + 12) % 12;
+    labels.push(months[monthIndex]);
+  }
+
+  return labels;
+};
+
 // Helper function to generate six months of trend data
 const generateSixMonthsTrendData = (current, min, max, isPercentage = false, trend = 'random') => {
   const data = [];
@@ -83,20 +102,21 @@ const generateChartData = (kpi) => {
     const revenuePart = valueParts[0].trim(); // "₹12.50Cr"
     const profitPart = valueParts[1].trim(); // "₹2.50Cr"
 
-    // Extract target values
-    const targetParts = kpi.target.toString().split('/');
-    const revenueTarget = targetParts[0].trim(); // "₹15.0Cr"
-    const profitTarget = targetParts[1].trim(); // "₹2.5Cr"
+    // Extract target values - commented out as not currently used
+    // const targetParts = kpi.target.toString().split('/');
 
     // Extract numeric values
     const revenueValue = parseFloat(revenuePart.replace(/[^0-9.-]+/g, ''));
     const profitValue = parseFloat(profitPart.replace(/[^0-9.-]+/g, ''));
-    const revenueTargetValue = parseFloat(revenueTarget.replace(/[^0-9.-]+/g, ''));
-    const profitTargetValue = parseFloat(profitTarget.replace(/[^0-9.-]+/g, ''));
 
     // Generate trend data for both revenue and profit
-    const revenueData = generateSixMonthsTrendData(revenueValue, 'up', 0.5, revenueValue * 0.7, revenueValue * 1.3, false);
-    const profitData = generateSixMonthsTrendData(profitValue, 'up', 0.3, profitValue * 0.6, profitValue * 1.4, false);
+    const revenueMin = revenueValue * 0.7;
+    const revenueMax = revenueValue * 1.3;
+    const profitMin = profitValue * 0.6;
+    const profitMax = profitValue * 1.4;
+
+    const revenueData = generateSixMonthsTrendData(revenueValue, revenueMin, revenueMax, false, 'up');
+    const profitData = generateSixMonthsTrendData(profitValue, profitMin, profitMax, false, 'up');
 
     // Generate labels (last 6 months)
     const labels = generateMonthLabels(6);
@@ -247,8 +267,9 @@ export const generateRandomData = () => {
   const unloadingTurnaround = randomTime(4.5, 0.6);
   const freightCostsPerKm = (randomInRange(35, 45) / 10).toFixed(2);
   const freightCostsPerTon = (randomInRange(120, 150) / 10).toFixed(2);
-  const freightCosts = (randomInRange(120, 150) / 10).toFixed(2);
-  const weightVolumeMetrics = randomPercentage(82, 3).toFixed(2);
+  // These variables are no longer used but kept for reference
+  // const freightCosts = (randomInRange(120, 150) / 10).toFixed(2);
+  // const weightVolumeMetrics = randomPercentage(82, 3).toFixed(2);
   const companyPlacementEfficiency = randomPercentage(80, 4).toFixed(2);
   const companyCleanPOD = randomPercentage(85, 3).toFixed(2);
   const invoiceSettlement = randomPercentage(78, 5).toFixed(2);
