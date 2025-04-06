@@ -207,8 +207,8 @@
 .kpi-chart {
   flex: 1;
   height: 160px;
-  max-height: 200px;
-  min-height: 140px;
+  max-height: 160px;
+  min-height: 120px;
   margin-top: 0.75rem;
   width: 100%;
   position: relative;

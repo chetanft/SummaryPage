@@ -73,25 +73,26 @@ main {
 
 .kpi-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  grid-template-rows: repeat(2, minmax(200px, 300px));
-  gap: 1rem;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(2, auto);
+  gap: 1.25rem;
   width: 100%;
   max-width: 100%;
   margin: 0 auto;
   margin-bottom: 1rem;
-  overflow-x: hidden;
+  overflow: hidden;
   grid-auto-flow: dense; /* Ensures grid items fill empty spaces */
   box-sizing: border-box; /* Include padding in width calculation */
-  padding-left: 1rem;
-  padding-right: 1rem;
+  padding-inline: 2rem;
+  padding-top: 1rem;
 }
 
 /* Media query for smaller screens */
 @media (max-width: 1200px) {
   .kpi-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-template-rows: repeat(4, minmax(200px, 300px));
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(4, auto);
+    gap: 1rem;
   }
 }
 
@@ -100,7 +101,36 @@ main {
   .kpi-grid {
     grid-template-columns: 1fr;
     grid-template-rows: auto;
+    padding-inline: 1rem;
   }
+}
+
+/* Media query for large screens */
+@media (min-width: 1201px) {
+  .kpi-grid {
+    grid-template-rows: repeat(2, auto);
+  }
+}
+
+/* Tile size classes */
+.tile-2x2 {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+.tile-2x1 {
+  grid-column: span 2;
+  grid-row: span 1;
+}
+
+.tile-1x2 {
+  grid-column: span 1;
+  grid-row: span 2;
+}
+
+.tile-1x1 {
+  grid-column: span 1;
+  grid-row: span 1;
 }
 
 .kpi-strip-section {

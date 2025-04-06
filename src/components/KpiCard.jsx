@@ -326,9 +326,9 @@ const KpiCard = ({ kpi, onClick }) => {
       </div>
 
       <div className="kpi-chart" style={{
-        height: tileSize === '2x2' ? '250px' :
-               tileSize === '2x1' ? '180px' :
-               tileSize === '1x2' ? '250px' : '160px'
+        height: tileSize === '2x2' ? '160px' :
+               tileSize === '2x1' ? '140px' :
+               tileSize === '1x2' ? '160px' : '120px'
       }}>
         {renderChart()}
       </div>
