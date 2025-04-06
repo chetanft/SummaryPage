@@ -45,7 +45,9 @@
 .header-right {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   gap: 1rem;
+  margin-left: auto; /* Push to the right */
 }
 
 .persona-selector {

@@ -146,10 +146,10 @@
   margin-bottom: 0.25rem;
 }
 
-.kpi-value-target-container {
+.kpi-value-with-trend {
   display: flex;
-  align-items: baseline;
-  gap: 1rem;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .kpi-value {
@@ -161,14 +161,14 @@
 
 .kpi-trend {
   font-size: 1.25rem;
-  margin-left: 0.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   background-color: rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .kpi-trend.up {

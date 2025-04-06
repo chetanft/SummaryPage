@@ -236,7 +236,7 @@ const KpiCard = ({ kpi, onClick }) => {
       // For conditional coloring based on target
       if (targetValue && dataset.data) {
         // Create segment styling for above/below target
-        const segmentColors = dataset.data.map((value, i) => {
+        const segmentColors = dataset.data.map((value) => {
           if (kpi.lowerIsBetter) {
             return value <= targetValue ? '#04bc15' : '#ff4d4f'; // Green if below target, red if above
           } else {
@@ -300,23 +300,23 @@ const KpiCard = ({ kpi, onClick }) => {
       </div>
       <div className="kpi-content">
         <div className="kpi-value-container">
-          <div className="kpi-value-target-container">
+          <div className="kpi-value-with-trend">
             <div
               className="kpi-value"
               style={{ color: getValueColor() }}
             >
               {value}
             </div>
-            {target && (
-              <div className="kpi-target">
-                <span className="kpi-target-label">Target:</span>
-                <span className="kpi-target-value">{target}</span>
+            {trend && (
+              <div className={`kpi-trend ${trend}`}>
+                {getTrendIcon()}
               </div>
             )}
           </div>
-          {trend && (
-            <div className={`kpi-trend ${trend}`}>
-              {getTrendIcon()}
+          {target && (
+            <div className="kpi-target">
+              <span className="kpi-target-label">Target:</span>
+              <span className="kpi-target-value">{target}</span>
             </div>
           )}
         </div>
