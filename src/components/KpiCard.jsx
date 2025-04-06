@@ -37,6 +37,11 @@ const KpiCard = ({ kpi, onClick }) => {
 
     if (isNaN(numericValue) || isNaN(numericTarget)) return 'var(--color-text-primary)';
 
+    // If lowerIsBetter is undefined, default to higher is better
+    if (kpi.lowerIsBetter === undefined) {
+      return numericValue >= numericTarget ? 'var(--color-success)' : 'var(--color-error)';
+    }
+
     if (kpi.lowerIsBetter) {
       return numericValue <= numericTarget ? 'var(--color-success)' : 'var(--color-error)';
     } else {
@@ -78,11 +83,45 @@ const KpiCard = ({ kpi, onClick }) => {
     return valueNumeric < targetNumeric;
   };
 
+  // Determine if the KPI is meeting its target based on lowerIsBetter property
+  const isMeetingTarget = () => {
+    if (!value || !target) return false;
+
+    // Extract numeric values
+    const valueNumeric = parseFloat(value.toString().replace(/[^0-9.-]+/g, ''));
+    const targetNumeric = parseFloat(target.toString().replace(/[^0-9.-]+/g, ''));
+
+    if (isNaN(valueNumeric) || isNaN(targetNumeric)) return false;
+
+    // If lowerIsBetter is undefined, default to higher is better
+    if (kpi.lowerIsBetter === undefined) {
+      return valueNumeric >= targetNumeric;
+    }
+
+    // For KPIs where lower is better, meeting target means value <= target
+    if (kpi.lowerIsBetter) {
+      return valueNumeric <= targetNumeric;
+    }
+
+    // For KPIs where higher is better, meeting target means value >= target
+    return valueNumeric >= targetNumeric;
+  };
+
   // Apply target comparison class to the KPI card
   const getCardClassName = () => {
     let className = `kpi-card ${tileSize}`;
+
+    // Add meeting-target or not-meeting-target class based on the KPI's performance
+    if (isMeetingTarget()) {
+      className += ' meeting-target';
+    } else {
+      className += ' not-meeting-target';
+    }
+
+    // Keep the above-target and below-target classes for backward compatibility
     if (isAboveTarget()) className += ' above-target';
     if (isBelowTarget()) className += ' below-target';
+
     return className;
   };
 
@@ -220,14 +259,11 @@ const KpiCard = ({ kpi, onClick }) => {
           backgroundColor = 'rgba(16, 185, 129, 0.15)';
         }
       } else {
-        // Use green for KPIs where higher is better and value is above target
-        if (!kpi.lowerIsBetter && isAboveTarget()) {
+        // Use green when meeting target, red when not meeting target
+        if (isMeetingTarget()) {
           borderColor = '#10b981'; // Green
           backgroundColor = 'rgba(16, 185, 129, 0.15)';
-        }
-        // Use red for KPIs where lower is better and value is above target
-        // or KPIs where higher is better and value is below target
-        else if ((kpi.lowerIsBetter && isAboveTarget()) || (!kpi.lowerIsBetter && isBelowTarget())) {
+        } else {
           borderColor = '#ef4444'; // Red
           backgroundColor = 'rgba(239, 68, 68, 0.15)';
         }
@@ -235,31 +271,78 @@ const KpiCard = ({ kpi, onClick }) => {
 
       // For conditional coloring based on target
       if (targetValue && dataset.data) {
-        // Create segment styling for above/below target
-        const segmentColors = dataset.data.map((value) => {
-          if (kpi.lowerIsBetter) {
-            return value <= targetValue ? '#10b981' : '#ef4444'; // Green if below target, red if above
+        try {
+          // Create segment styling for above/below target
+          const segmentColors = dataset.data.map((value) => {
+            // Extract numeric value
+            const numericValue = parseFloat(value.toString());
+            const numericTarget = parseFloat(targetValue.toString());
+
+            if (isNaN(numericValue) || isNaN(numericTarget)) {
+              return '#939393'; // Grey for invalid values
+            }
+
+            // If lowerIsBetter is undefined, default to higher is better
+            if (kpi.lowerIsBetter === undefined) {
+              return numericValue >= numericTarget ? '#10b981' : '#ef4444';
+            }
+
+            // For KPIs where lower is better, meeting target means value <= target
+            if (kpi.lowerIsBetter) {
+              return numericValue <= numericTarget ? '#10b981' : '#ef4444';
+            }
+
+            // For KPIs where higher is better, meeting target means value >= target
+            return numericValue >= numericTarget ? '#10b981' : '#ef4444';
+          });
+
+          // Create segment background colors
+          const segmentBackgroundColors = segmentColors.map(color =>
+            color === '#10b981' ? 'rgba(16, 185, 129, 0.15)' : 'rgba(239, 68, 68, 0.15)'
+          );
+
+          // Check if all colors are the same (no segments needed)
+          const allSameColor = segmentColors.every(color => color === segmentColors[0]);
+
+          if (allSameColor) {
+            // If all segments are the same color, use a single color for better compatibility
+            return {
+              ...dataset,
+              borderColor: segmentColors[0],
+              backgroundColor: segmentColors[0] === '#10b981' ? 'rgba(16, 185, 129, 0.15)' : 'rgba(239, 68, 68, 0.15)',
+              borderWidth: 3,
+              pointRadius: 2,
+              pointHoverRadius: 5,
+              tension: 0.2,
+              fill: true
+            };
           } else {
-            return value >= targetValue ? '#10b981' : '#ef4444'; // Green if above target, red if below
+            // Use segment coloring when there are different colors
+            return {
+              ...dataset,
+              borderColor: segmentColors,
+              backgroundColor: segmentBackgroundColors,
+              borderWidth: 3,
+              pointRadius: 2,
+              pointHoverRadius: 5,
+              tension: 0.2,
+              fill: true
+            };
           }
-        });
-
-        // Create segment background colors
-        const segmentBackgroundColors = segmentColors.map(color =>
-          color === '#10b981' ? 'rgba(16, 185, 129, 0.15)' : 'rgba(239, 68, 68, 0.15)'
-        );
-
-        // Always use segment colors for more accurate visualization
-        return {
-          ...dataset,
-          borderColor: segmentColors,
-          backgroundColor: segmentBackgroundColors,
-          borderWidth: 3,
-          pointRadius: 2,
-          pointHoverRadius: 5,
-          tension: 0.2,
-          fill: true
-        };
+        } catch (error) {
+          console.error('Error applying segment coloring:', error);
+          // Fallback to default coloring
+          return {
+            ...dataset,
+            borderColor: borderColor,
+            backgroundColor: backgroundColor,
+            borderWidth: 3,
+            pointRadius: 2,
+            pointHoverRadius: 5,
+            tension: 0.2,
+            fill: true
+          };
+        }
       }
 
       return {
