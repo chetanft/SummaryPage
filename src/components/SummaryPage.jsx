@@ -5,6 +5,7 @@ import KpiStrip from './KpiStrip';
 import DrillDownPane from './DrillDownPane';
 import BranchTabs from './BranchTabs';
 import RefreshIndicator from './RefreshIndicator';
+import ThemeToggle from './ThemeToggle';
 import { DataContext } from '../context/DataContext';
 
 // Define which KPIs should be shown in the main grid (important KPIs)
@@ -60,7 +61,10 @@ const SummaryPage = () => {
               <option value="branch">Branch-Level</option>
             </select>
           </div>
-          <RefreshIndicator />
+          <div className="header-right">
+            <RefreshIndicator />
+            <ThemeToggle />
+          </div>
         </div>
       </header>
 
