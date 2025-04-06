@@ -4,9 +4,36 @@ import './KpiStrip.css';
 
 // Define which KPIs should be shown in the strip (non-important KPIs)
 const stripKpiIds = {
-  cxo: ['fuelEfficiency', 'salesDeliveryOrders', 'tripCount', 'inboundFreightCost'],
-  company: ['otherChargesBreakdown', 'materialInvoices', 'freightInvoices', 'companyTripCount'],
-  branch: ['unloadingTime', 'cleanPOD', 'placementEfficiency', 'salesOrders']
+  cxo: ['fuelEfficiency', 'salesDeliveryOrders', 'tripCount', 'inboundFreightCost', 'otif', 'outboundFreightCost'],
+  company: ['otherChargesBreakdown', 'materialInvoices', 'freightInvoices', 'companyTripCount', 'placementEfficiency', 'cleanPODInvoices'],
+  branch: ['unloadingTime', 'cleanPOD', 'placementEfficiency', 'salesOrders', 'invoiceSubmission', 'materialFreightInvoices']
+};
+
+// Define grid area mapping for non-important KPIs
+const nonImportantGridAreaMap = {
+  // First row of non-important KPIs
+  fuelEfficiency: 'non-1',
+  salesDeliveryOrders: 'non-2',
+  tripCount: 'non-3',
+  inboundFreightCost: 'non-4',
+  otif: 'non-5',
+  outboundFreightCost: 'non-6',
+
+  // Company level
+  otherChargesBreakdown: 'non-1',
+  materialInvoices: 'non-2',
+  freightInvoices: 'non-3',
+  companyTripCount: 'non-4',
+  placementEfficiency: 'non-5',
+  cleanPODInvoices: 'non-6',
+
+  // Branch level
+  unloadingTime: 'non-1',
+  cleanPOD: 'non-2',
+  placementEfficiency: 'non-3',
+  salesOrders: 'non-4',
+  invoiceSubmission: 'non-5',
+  materialFreightInvoices: 'non-6'
 };
 
 const KpiStrip = ({ kpis, persona = 'cxo' }) => {
@@ -156,8 +183,8 @@ const KpiStrip = ({ kpis, persona = 'cxo' }) => {
 
   return (
     <>
-      {filteredKpis.map((kpi) => (
-        <div key={kpi.id} className={`kpi-strip-item ${getTargetComparisonClass(kpi)}`}>
+      {filteredKpis.map((kpi, index) => (
+        <div key={kpi.id} className={`kpi-strip-item ${getTargetComparisonClass(kpi)} tile-${nonImportantGridAreaMap[kpi.id] || `non-${index + 1}`}`}>
           <div className="kpi-content">
             <h4 className="kpi-title">{kpi.name}</h4>
             <div className="kpi-value-row">

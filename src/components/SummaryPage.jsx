@@ -10,9 +10,33 @@ import { DataContext } from '../context/DataContext';
 
 // Define which KPIs should be shown in the main grid (important KPIs)
 const mainKpiIds = {
-  cxo: ['revenueProfitTrends', 'orderToDelivery', 'freightCostPerKm', 'carbonEmissions'],
-  company: ['orderExecutionTime', 'cleanPODInvoices', 'freightCostsPerUnit', 'regionalPerformance'],
-  branch: ['statusFlow', 'transitTimeMonitoring', 'branchVehicleUtilization', 'branchOrderExecutionTime']
+  cxo: ['revenueProfitTrends', 'orderToDelivery', 'freightCostPerKm', 'carbonEmissions', 'regionalPerformance'],
+  company: ['orderExecutionTime', 'vehicleWeightVolumeUtilization', 'freightCostsPerUnit', 'transitUnloadingTime', 'invoiceSettlement'],
+  branch: ['statusFlow', 'realTimeTrips', 'branchVehicleUtilization', 'transitTimeMonitoring', 'branchOrderExecutionTime']
+};
+
+// Define grid area mapping for each KPI
+const kpiGridAreaMap = {
+  // CXO Level
+  revenueProfitTrends: 'main-kpi',
+  orderToDelivery: 'kpi-2',
+  freightCostPerKm: 'kpi-3',
+  carbonEmissions: 'kpi-4',
+  regionalPerformance: 'kpi-5',
+
+  // Company Level
+  orderExecutionTime: 'main-kpi',
+  vehicleWeightVolumeUtilization: 'kpi-2',
+  freightCostsPerUnit: 'kpi-3',
+  transitUnloadingTime: 'kpi-4',
+  invoiceSettlement: 'kpi-5',
+
+  // Branch Level
+  statusFlow: 'main-kpi',
+  realTimeTrips: 'kpi-2',
+  branchVehicleUtilization: 'kpi-3',
+  transitTimeMonitoring: 'kpi-4',
+  branchOrderExecutionTime: 'kpi-5'
 };
 
 const SummaryPage = () => {
@@ -81,30 +105,29 @@ const SummaryPage = () => {
           </>
         )}
 
-        {/* Important KPIs with full charts */}
+        {/* All KPIs in a unified grid layout */}
         <section className="kpi-grid">
           {loading ? (
             <div className="loading-indicator">Loading data...</div>
           ) : (
-            data && data[`${selectedPersona}Kpis`] && data[`${selectedPersona}Kpis`]
-              .filter(kpi => mainKpiIds[selectedPersona]?.includes(kpi.id))
-              .map(kpi => (
-              <div key={kpi.id} className={`tile-${kpi.tileSize || '1x1'}`}>
-                <KpiCard
-                  kpi={kpi}
-                  onClick={handleKpiClick}
-                />
-              </div>
-            ))
-          )}
-        </section>
+            <>
+              {/* Important KPIs with full charts */}
+              {data && data[`${selectedPersona}Kpis`] && data[`${selectedPersona}Kpis`]
+                .filter(kpi => mainKpiIds[selectedPersona]?.includes(kpi.id))
+                .map(kpi => (
+                <div key={kpi.id} className={`tile-${kpiGridAreaMap[kpi.id] || '1x1'}`}>
+                  <KpiCard
+                    kpi={kpi}
+                    onClick={handleKpiClick}
+                  />
+                </div>
+              ))}
 
-        {/* Not-so-important KPIs in a horizontal strip at the bottom */}
-        <section className="kpi-strip-section">
-          {loading ? (
-            <div className="loading-indicator">Loading data...</div>
-          ) : (
-            data && data[`${selectedPersona}Kpis`] && <KpiStrip kpis={data[`${selectedPersona}Kpis`]} persona={selectedPersona} />
+              {/* Non-important KPIs integrated into the grid */}
+              {data && data[`${selectedPersona}Kpis`] &&
+                <KpiStrip kpis={data[`${selectedPersona}Kpis`]} persona={selectedPersona} />
+              }
+            </>
           )}
         </section>
       </main>
