@@ -1,5 +1,5 @@
 import React from 'react';
-import { Line } from 'react-chartjs-2';
+import { Line, Bar, Pie, Doughnut, Radar } from 'react-chartjs-2';
 import { Chart, registerables } from 'chart.js';
 import annotationPlugin from 'chartjs-plugin-annotation';
 import './KpiCard.css';
@@ -8,7 +8,51 @@ import Tooltip from './Tooltip';
 // Register Chart.js components and plugins
 Chart.register(...registerables, annotationPlugin);
 
-const KpiCard = ({ kpi, onClick }) => {
+// Chart type mapping based on KPI ID
+const getChartType = (kpiId) => {
+  // Line charts for time-series data
+  const lineChartKpis = [
+    'revenueProfitTrends',
+    'orderToDelivery',
+    'freightCostPerKm',
+    'transitTimeMonitoring',
+    'orderExecutionTime',
+    'branchOrderExecutionTime',
+    'invoiceSettlement'
+  ];
+
+  // Bar charts for comparing categories
+  const barChartKpis = [
+    'branchVehicleUtilization',
+    'tripCount',
+    'statusFlow',
+    'realTimeTrips',
+    'unloadingTime',
+    'vehicleWeightVolumeUtilization'
+  ];
+
+  // Pie/Doughnut charts for proportions
+  const pieChartKpis = [
+    'otherChargesBreakdown',
+    'carbonEmissions'
+  ];
+
+  // Radar charts for multiple variables
+  const radarChartKpis = [
+    'vehicleUtilizationRadar'
+  ];
+
+  // Determine chart type based on KPI ID
+  if (lineChartKpis.includes(kpiId)) return 'line';
+  if (barChartKpis.includes(kpiId)) return 'bar';
+  if (pieChartKpis.includes(kpiId)) return 'pie';
+  if (radarChartKpis.includes(kpiId)) return 'radar';
+
+  // Default to line chart if no match
+  return 'line';
+};
+
+const KpiCard = ({ kpi, onClick, tileSize = '1x1', isNonImportant = false }) => {
   const {
     name,
     value,
@@ -16,8 +60,7 @@ const KpiCard = ({ kpi, onClick }) => {
     trend,
     status,
     chartData,
-    tooltipContent,
-    tileSize = '1x1' // Default to 1x1 if not specified
+    tooltipContent
   } = kpi;
 
   const getStatusColor = () => {
@@ -132,8 +175,11 @@ const KpiCard = ({ kpi, onClick }) => {
       return <div className="no-chart-data">No chart data available</div>;
     }
 
+    // Determine chart type based on KPI ID
+    const chartType = getChartType(kpi.id);
+
     // Create a deep copy of the chart data to avoid modifying the original
-    const lineData = JSON.parse(JSON.stringify(chartData));
+    const chartDataCopy = JSON.parse(JSON.stringify(chartData));
 
     // Extract target value for target line
     let targetValue = null;
@@ -243,8 +289,65 @@ const KpiCard = ({ kpi, onClick }) => {
       }
     };
 
+    // Adjust chart options based on chart type and whether this is a non-important KPI
+    let chartOptions = {
+      ...options,
+      plugins: {
+        ...options.plugins,
+        legend: {
+          display: (!isNonImportant && tileSize === '2x2') || chartType === 'pie' || chartType === 'doughnut' || chartType === 'radar'
+        },
+        tooltip: {
+          ...options.plugins.tooltip,
+          enabled: true
+        }
+      }
+    };
+
+    // Add or remove scales based on chart type
+    if (chartType === 'line' || chartType === 'bar') {
+      chartOptions.scales = {
+        x: {
+          ...options.scales.x,
+          display: !isNonImportant // Hide axes for non-important KPIs
+        },
+        y: {
+          ...options.scales.y,
+          display: !isNonImportant // Hide axes for non-important KPIs
+        }
+      };
+    } else if (chartType === 'radar') {
+      chartOptions.scales = {
+        r: {
+          beginAtZero: true,
+          ticks: {
+            color: 'var(--color-text-secondary)',
+            font: {
+              size: 10
+            },
+            backdropColor: 'transparent'
+          },
+          grid: {
+            color: 'rgba(0, 0, 0, 0.1)'
+          },
+          angleLines: {
+            color: 'rgba(0, 0, 0, 0.1)'
+          },
+          pointLabels: {
+            color: 'var(--color-text-primary)',
+            font: {
+              size: 10
+            }
+          }
+        }
+      };
+    } else {
+      // For pie and doughnut charts, remove scales
+      delete chartOptions.scales;
+    }
+
     // Style the datasets
-    lineData.datasets = lineData.datasets.map((dataset, index) => {
+    chartDataCopy.datasets = chartDataCopy.datasets.map((dataset, index) => {
       // Determine color based on KPI type
       let borderColor = '#003c9b'; // Default blue
       let backgroundColor = 'rgba(0, 60, 155, 0.15)';
@@ -258,6 +361,32 @@ const KpiCard = ({ kpi, onClick }) => {
           borderColor = '#10b981'; // Green
           backgroundColor = 'rgba(16, 185, 129, 0.15)';
         }
+      }
+      // For pie and doughnut charts, use an array of colors
+      else if (chartType === 'pie' || chartType === 'doughnut') {
+        const colorPalette = [
+          '#003c9b', // Blue
+          '#10b981', // Green
+          '#ef4444', // Red
+          '#ffbe07', // Yellow
+          '#8b5cf6', // Purple
+          '#ec4899', // Pink
+          '#06b6d4', // Cyan
+          '#f97316'  // Orange
+        ];
+
+        // Use a different color for each segment
+        borderColor = colorPalette[index % colorPalette.length];
+        backgroundColor = colorPalette.map(color => {
+          const rgbMatch = color.match(/^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i);
+          if (rgbMatch) {
+            const r = parseInt(rgbMatch[1], 16);
+            const g = parseInt(rgbMatch[2], 16);
+            const b = parseInt(rgbMatch[3], 16);
+            return `rgba(${r}, ${g}, ${b}, 0.7)`;
+          }
+          return color;
+        });
       } else {
         // Use green when meeting target, red when not meeting target
         if (isMeetingTarget()) {
@@ -269,8 +398,37 @@ const KpiCard = ({ kpi, onClick }) => {
         }
       }
 
+      // For radar charts, use specific styling
+      if (chartType === 'radar') {
+        return {
+          ...dataset,
+          borderColor: borderColor,
+          backgroundColor: 'rgba(0, 60, 155, 0.2)',
+          borderWidth: 2,
+          pointBackgroundColor: borderColor,
+          pointBorderColor: '#fff',
+          pointHoverBackgroundColor: '#fff',
+          pointHoverBorderColor: borderColor,
+          pointRadius: 3,
+          pointHoverRadius: 5
+        };
+      }
+
+      // For bar charts, use specific styling
+      if (chartType === 'bar') {
+        return {
+          ...dataset,
+          borderColor: borderColor,
+          backgroundColor: backgroundColor,
+          borderWidth: 1,
+          borderRadius: 4,
+          barThickness: 'flex',
+          maxBarThickness: 40
+        };
+      }
+
       // For conditional coloring based on target
-      if (targetValue && dataset.data) {
+      if (targetValue && dataset.data && (chartType === 'line')) {
         try {
           // Create segment styling for above/below target
           const segmentColors = dataset.data.map((value) => {
@@ -345,6 +503,18 @@ const KpiCard = ({ kpi, onClick }) => {
         }
       }
 
+      // For pie/doughnut charts
+      if (chartType === 'pie' || chartType === 'doughnut') {
+        return {
+          ...dataset,
+          borderColor: 'white',
+          backgroundColor: backgroundColor,
+          borderWidth: 1,
+          hoverOffset: 10
+        };
+      }
+
+      // Default styling for line charts
       return {
         ...dataset,
         borderColor: borderColor,
@@ -360,7 +530,20 @@ const KpiCard = ({ kpi, onClick }) => {
     });
 
     try {
-      return <Line data={lineData} options={options} />;
+      // Render the appropriate chart type based on KPI ID
+    switch (chartType) {
+      case 'bar':
+        return <Bar data={chartDataCopy} options={chartOptions} />;
+      case 'pie':
+        return <Pie data={chartDataCopy} options={chartOptions} />;
+      case 'doughnut':
+        return <Doughnut data={chartDataCopy} options={chartOptions} />;
+      case 'radar':
+        return <Radar data={chartDataCopy} options={chartOptions} />;
+      case 'line':
+      default:
+        return <Line data={chartDataCopy} options={chartOptions} />;
+    }
     } catch (error) {
       console.error('Error rendering chart:', error);
       return <div className="no-chart-data">Error rendering chart</div>;
