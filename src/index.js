@@ -5,7 +5,7 @@ import './styles/theme.css';
 import SummaryPage from './components/SummaryPage';
 import { KpiProvider } from './context/KpiContext';
 import { ThemeProvider } from './context/ThemeContext';
-import ThemeToggle from './components/ThemeToggle';
+// ThemeToggle is now included in the SummaryPage component
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -13,7 +13,6 @@ root.render(
     <ThemeProvider>
       <KpiProvider>
         <SummaryPage />
-        <ThemeToggle />
       </KpiProvider>
     </ThemeProvider>
   </React.StrictMode>

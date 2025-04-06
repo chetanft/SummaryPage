@@ -4,6 +4,7 @@ import KpiCard from './KpiCard';
 import KpiStrip from './KpiStrip';
 import DrillDownPane from './DrillDownPane';
 import BranchTabs from './BranchTabs';
+import ThemeToggle from './ThemeToggle';
 import kpiDefinitions from '../data/kpiData';
 
 const SummaryPage = () => {
@@ -27,17 +28,23 @@ const SummaryPage = () => {
     <div className="summary-page">
       <header className="summary-header">
         <h1>Summary Page</h1>
-        <div className="persona-selector">
-          <label htmlFor="persona">User Persona: </label>
-          <select
-            id="persona"
-            value={selectedPersona}
-            onChange={handlePersonaChange}
-          >
-            <option value="cxo">CXO-Level</option>
-            <option value="company">Company-Level</option>
-            <option value="branch">Branch-Level</option>
-          </select>
+        <div className="header-controls">
+          <div className="persona-selector">
+            <label htmlFor="persona">User Persona: </label>
+            <select
+              id="persona"
+              value={selectedPersona}
+              onChange={handlePersonaChange}
+            >
+              <option value="cxo">CXO-Level</option>
+              <option value="company">Company-Level</option>
+              <option value="branch">Branch-Level</option>
+            </select>
+          </div>
+          <div className="last-updated">
+            Last updated: {new Date().toLocaleTimeString()}
+          </div>
+          <ThemeToggle />
         </div>
       </header>
 
