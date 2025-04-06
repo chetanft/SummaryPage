@@ -133,14 +133,80 @@
   color: var(--color-text-primary);
 }
 
+.kpi-content {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0.75rem;
+}
+
+.kpi-value-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.25rem;
+}
+
+.kpi-value {
+  font-size: 2rem; /* 32px */
+  font-weight: 700;
+  line-height: 1.2;
+  transition: color 0.2s ease;
+}
+
+.kpi-trend {
+  font-size: 1.25rem;
+  margin-left: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.kpi-trend.up {
+  color: var(--color-success);
+  background-color: rgba(4, 188, 21, 0.1);
+}
+
+.kpi-trend.down {
+  color: var(--color-error);
+  background-color: rgba(255, 77, 79, 0.1);
+}
+
+.kpi-trend.stable {
+  color: var(--color-warning);
+  background-color: rgba(255, 190, 7, 0.1);
+}
+
+.kpi-target {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.kpi-target-label {
+  font-size: 14px;
+  color: var(--color-text-tertiary);
+}
+
+.kpi-target-value {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
 .kpi-chart {
   flex: 1;
   height: 160px;
   min-height: 140px;
-  margin-top: 1rem;
+  margin-top: 0.75rem;
   width: 100%;
   position: relative;
   overflow: hidden;
+  border-radius: 4px;
 }
 
 /* No chart data message */

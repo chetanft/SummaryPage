@@ -1,11 +1,12 @@
 import React from 'react';
 import { Line } from 'react-chartjs-2';
 import { Chart, registerables } from 'chart.js';
+import annotationPlugin from 'chartjs-plugin-annotation';
 import './KpiCard.css';
 import Tooltip from './Tooltip';
 
-// Register Chart.js components
-Chart.register(...registerables);
+// Register Chart.js components and plugins
+Chart.register(...registerables, annotationPlugin);
 
 const KpiCard = ({ kpi, onClick }) => {
   const {
@@ -77,11 +78,12 @@ const KpiCard = ({ kpi, onClick }) => {
     return valueNumeric < targetNumeric;
   };
 
-  // Determine the appropriate class based on target comparison
-  const getTargetComparisonClass = () => {
-    if (isAboveTarget()) return 'above-target';
-    if (isBelowTarget()) return 'below-target';
-    return '';
+  // Apply target comparison class to the KPI card
+  const getCardClassName = () => {
+    let className = `kpi-card ${tileSize}`;
+    if (isAboveTarget()) className += ' above-target';
+    if (isBelowTarget()) className += ' below-target';
+    return className;
   };
 
   // Render chart
@@ -94,7 +96,16 @@ const KpiCard = ({ kpi, onClick }) => {
     // Create a deep copy of the chart data to avoid modifying the original
     const lineData = JSON.parse(JSON.stringify(chartData));
 
-    // Basic chart options
+    // Extract target value for target line
+    let targetValue = null;
+    if (target) {
+      const numericTarget = parseFloat(target.toString().replace(/[^0-9.-]+/g, ''));
+      if (!isNaN(numericTarget)) {
+        targetValue = numericTarget;
+      }
+    }
+
+    // Enhanced chart options
     const options = {
       responsive: true,
       maintainAspectRatio: false,
@@ -103,8 +114,42 @@ const KpiCard = ({ kpi, onClick }) => {
           display: false
         },
         tooltip: {
-          enabled: true
-        }
+          enabled: true,
+          backgroundColor: 'rgba(0, 0, 0, 0.7)',
+          titleFont: {
+            size: 12,
+            weight: 'bold'
+          },
+          bodyFont: {
+            size: 12
+          },
+          padding: 10,
+          cornerRadius: 4,
+          displayColors: false
+        },
+        // Add target line annotation if target value exists
+        annotation: targetValue ? {
+          annotations: {
+            targetLine: {
+              type: 'line',
+              yMin: targetValue,
+              yMax: targetValue,
+              borderColor: '#ffbe07', // Yellow
+              borderWidth: 2,
+              borderDash: [5, 5],
+              label: {
+                content: 'Target',
+                display: true,
+                position: 'end',
+                backgroundColor: 'rgba(255, 190, 7, 0.8)',
+                font: {
+                  size: 10,
+                  weight: 'bold'
+                }
+              }
+            }
+          }
+        } : {}
       },
       scales: {
         y: {
@@ -116,8 +161,11 @@ const KpiCard = ({ kpi, onClick }) => {
           ticks: {
             color: 'var(--color-text-secondary)',
             font: {
-              size: 10
-            }
+              size: 10,
+              weight: 'normal'
+            },
+            padding: 5,
+            maxTicksLimit: 5 // Limit the number of ticks for cleaner appearance
           },
           border: {
             color: 'var(--color-border)',
@@ -127,32 +175,62 @@ const KpiCard = ({ kpi, onClick }) => {
         x: {
           grid: {
             color: 'rgba(0, 0, 0, 0.05)',
-            lineWidth: 1
+            lineWidth: 1,
+            display: false // Hide vertical grid lines for cleaner look
           },
           ticks: {
             color: 'var(--color-text-secondary)',
             font: {
-              size: 10
-            }
+              size: 10,
+              weight: 'normal'
+            },
+            padding: 5
           },
           border: {
             color: 'var(--color-border)',
             width: 1
           }
         }
+      },
+      elements: {
+        line: {
+          tension: 0.2 // Smoother curves
+        },
+        point: {
+          radius: 2,
+          hoverRadius: 5,
+          hitRadius: 10 // Larger hit area for better interaction
+        }
       }
     };
 
     // Style the datasets
     lineData.datasets = lineData.datasets.map(dataset => {
+      // Determine color based on KPI type
+      let borderColor = '#003c9b'; // Default blue
+      let backgroundColor = 'rgba(0, 60, 155, 0.1)';
+
+      // Use green for KPIs where higher is better and value is above target
+      if (!kpi.lowerIsBetter && isAboveTarget()) {
+        borderColor = '#04bc15'; // Green
+        backgroundColor = 'rgba(4, 188, 21, 0.1)';
+      }
+      // Use red for KPIs where lower is better and value is above target
+      // or KPIs where higher is better and value is below target
+      else if ((kpi.lowerIsBetter && isAboveTarget()) || (!kpi.lowerIsBetter && isBelowTarget())) {
+        borderColor = '#ff4d4f'; // Red
+        backgroundColor = 'rgba(255, 77, 79, 0.1)';
+      }
+
       return {
         ...dataset,
-        borderColor: '#003c9b',
-        backgroundColor: 'rgba(0, 60, 155, 0.1)',
-        borderWidth: 2,
-        pointRadius: 0,
-        pointHoverRadius: 4,
-        tension: 0.4
+        borderColor: borderColor,
+        backgroundColor: backgroundColor,
+        borderWidth: 3, // Increased from 2 to 3
+        pointRadius: 2, // Changed from 0 to 2
+        pointHoverRadius: 5, // Increased from 4 to 5
+        tension: 0.2, // Reduced from 0.4 to 0.2 for more visible trends
+        fill: true // Ensure area below line is filled
       };
     });
 
@@ -165,14 +243,14 @@ const KpiCard = ({ kpi, onClick }) => {
   };
 
   return (
-    <div 
-      className={`kpi-card ${tileSize}`} 
+    <div
+      className={getCardClassName()}
       onClick={() => onClick && onClick(kpi)}
     >
       <div className="kpi-header">
         <h3 className="kpi-title">
           {status && (
-            <span 
+            <span
               className="status-indicator"
               style={{ backgroundColor: getStatusColor() }}
             ></span>
@@ -183,8 +261,8 @@ const KpiCard = ({ kpi, onClick }) => {
       </div>
       <div className="kpi-content">
         <div className="kpi-value-container">
-          <div 
-            className="kpi-value" 
+          <div
+            className="kpi-value"
             style={{ color: getValueColor() }}
           >
             {value}
