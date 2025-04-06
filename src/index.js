@@ -6,7 +6,6 @@ import SummaryPage from './components/SummaryPage';
 import { KpiProvider } from './context/KpiContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { DataProvider } from './context/DataContext';
-import ThemeToggle from './components/ThemeToggle';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -15,7 +14,6 @@ root.render(
       <DataProvider>
         <KpiProvider>
           <SummaryPage />
-          <ThemeToggle />
         </KpiProvider>
       </DataProvider>
     </ThemeProvider>
