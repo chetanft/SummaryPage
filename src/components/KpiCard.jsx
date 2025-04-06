@@ -1,5 +1,5 @@
-import React from 'react';
-import { Line, Bar, Pie } from 'react-chartjs-2';
+import React, { useRef, useEffect } from 'react';
+import { Line } from 'react-chartjs-2';
 import { Chart, registerables } from 'chart.js';
 import './KpiCard.css';
 import Tooltip from './Tooltip';
@@ -8,7 +8,7 @@ import Tooltip from './Tooltip';
 Chart.register(...registerables);
 
 const KpiCard = ({ kpi, onClick }) => {
-  // Get the persona from the KPI or default to 'cxo'
+  const chartRef = useRef(null);
   const selectedPersona = kpi.persona || 'cxo';
   const {
     name,
@@ -76,6 +76,10 @@ const KpiCard = ({ kpi, onClick }) => {
       return <div className="no-chart-data">No chart data available</div>;
     }
 
+    // Log chart data for debugging
+    console.log('Rendering chart for KPI:', name);
+    console.log('Chart data:', chartData);
+
     const options = {
       responsive: true,
       maintainAspectRatio: false,
@@ -137,8 +141,8 @@ const KpiCard = ({ kpi, onClick }) => {
       return <Pie data={chartData} options={pieOptions} />;
     }
 
-    switch (chartType) {
-      case 'line':
+    // Always use line chart for simplicity
+    try {
         // Extract numeric target value if available
         let numericTarget = null;
         if (target) {
@@ -345,7 +349,93 @@ const KpiCard = ({ kpi, onClick }) => {
         }
 
         return <Line data={lineData} options={lineOptions} />;
-      case 'bar':
+    } catch (error) {
+      console.error('Error rendering chart:', error);
+      return <div className="no-chart-data">Error rendering chart</div>;
+    }
+  };
+
+  // Simplified renderChart function that only uses Line charts
+  const renderSimpleChart = () => {
+    if (!chartData || !chartData.datasets || !chartData.datasets[0] || !chartData.datasets[0].data) {
+      console.log('No chart data available for KPI:', name);
+      return <div className="no-chart-data">No chart data available</div>;
+    }
+
+    // Create a deep copy of the chart data to avoid modifying the original
+    const lineData = JSON.parse(JSON.stringify(chartData));
+
+    // Basic chart options
+    const options = {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          enabled: true
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: false,
+          grid: {
+            color: 'rgba(0, 0, 0, 0.05)',
+            lineWidth: 1
+          },
+          ticks: {
+            color: 'var(--color-text-secondary)',
+            font: {
+              size: 10
+            }
+          },
+          border: {
+            color: 'var(--color-border)',
+            width: 1
+          }
+        },
+        x: {
+          grid: {
+            color: 'rgba(0, 0, 0, 0.05)',
+            lineWidth: 1
+          },
+          ticks: {
+            color: 'var(--color-text-secondary)',
+            font: {
+              size: 10
+            }
+          },
+          border: {
+            color: 'var(--color-border)',
+            width: 1
+          }
+        }
+      }
+    };
+
+    // Style the datasets
+    lineData.datasets = lineData.datasets.map(dataset => {
+      return {
+        ...dataset,
+        borderColor: '#003c9b',
+        backgroundColor: 'rgba(0, 60, 155, 0.1)',
+        borderWidth: 2,
+        pointRadius: 0,
+        pointHoverRadius: 4,
+        tension: 0.4
+      };
+    });
+
+    try {
+      return <Line data={lineData} options={options} />;
+    } catch (error) {
+      console.error('Error rendering chart:', error);
+      return <div className="no-chart-data">Error rendering chart</div>;
+    }
+  };
+
+  // This is unreachable code that will be removed
         const barData = JSON.parse(JSON.stringify(chartData));
 
         // Create bar chart options with updated styling
@@ -615,7 +705,7 @@ const KpiCard = ({ kpi, onClick }) => {
                tileSize === '2x1' ? '180px' :
                tileSize === '1x2' ? '250px' : '160px'
       }}>
-        {chartData ? renderChart() : <div className="no-chart-data">No chart data available</div>}
+        {renderSimpleChart()}
       </div>
     </div>
   );
