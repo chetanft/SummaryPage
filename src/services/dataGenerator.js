@@ -175,17 +175,35 @@ export const generateRandomData = () => {
   const revenueCr = (randomInRange(120, 150) / 10).toFixed(2);
   const profitCr = (randomInRange(18, 25) / 10).toFixed(2);
   const orderToDelivery = randomTime(4.2, 0.3);
-  const freightCostTrends = randomPercentage(12, 2).toFixed(2);
+  const freightCostPerKm = (randomInRange(35, 45) / 10).toFixed(2);
   const tripCount = randomInRange(1800, 2200).toFixed(0);
   const carbonEmissions = randomInRange(450, 550).toFixed(0);
+  const otif = randomPercentage(88, 4).toFixed(2);
+  const outboundFreightCost = randomPercentage(8, 2).toFixed(2);
+  const inboundFreightCost = randomPercentage(6, 1).toFixed(2);
+  const fuelEfficiency = (randomInRange(38, 45) / 10).toFixed(2);
+  const vehicleUtilizationCXO = randomPercentage(82, 3).toFixed(2);
+  const salesDeliveryOrders = randomInRange(850, 950).toFixed(0);
 
   // Company Level KPIs
   const orderExecutionTime = randomTime(5.8, 0.5);
   const vehicleUtilization = randomPercentage(76, 4).toFixed(2);
+  const weightUtilization = randomPercentage(78, 3).toFixed(2);
+  const volumeUtilization = randomPercentage(74, 5).toFixed(2);
   const transitTime = randomTime(3.2, 0.4);
   const unloadingTurnaround = randomTime(4.5, 0.6);
+  const freightCostsPerKm = (randomInRange(35, 45) / 10).toFixed(2);
+  const freightCostsPerTon = (randomInRange(120, 150) / 10).toFixed(2);
   const freightCosts = (randomInRange(120, 150) / 10).toFixed(2);
   const weightVolumeMetrics = randomPercentage(82, 3).toFixed(2);
+  const companyPlacementEfficiency = randomPercentage(80, 4).toFixed(2);
+  const companyCleanPOD = randomPercentage(85, 3).toFixed(2);
+  const invoiceSettlement = randomPercentage(78, 5).toFixed(2);
+  const costPercentSales = randomPercentage(12, 2).toFixed(2);
+  const otherCharges = (randomInRange(25, 35) / 10).toFixed(2);
+  const materialInvoices = randomInRange(220, 280).toFixed(0);
+  const freightInvoices = randomInRange(180, 220).toFixed(0);
+  const companyTripCount = randomInRange(350, 450).toFixed(0);
 
   // Branch Level KPIs
   const unloadingTime = randomTime(2.5, 0.5);
@@ -197,6 +215,10 @@ export const generateRandomData = () => {
   const transitTimeMonitoring = randomTime(2.8, 0.3);
   const branchCleanPod = randomPercentage(88, 3).toFixed(2);
   const invoiceSubmission = randomPercentage(92, 2).toFixed(2);
+  const branchVehicleUtilization = randomPercentage(75, 5).toFixed(2);
+  const weightVolumeMetricsBranch = randomPercentage(80, 4).toFixed(2);
+  const branchOrderExecutionTime = randomTime(5.5, 0.4);
+  const materialFreightInvoices = randomInRange(120, 150).toFixed(0);
 
   // Generate operational metrics data for Planning tab
   const shipmentsPlanned = randomInRange(230, 260).toFixed(0);
@@ -247,12 +269,12 @@ export const generateRandomData = () => {
         tileSize: '2x1'
       },
       {
-        id: 'freightCostTrends',
-        name: 'Freight Cost (% of Revenue)',
-        value: `${freightCostTrends}%`,
-        target: '10.0%',
+        id: 'freightCostPerKm',
+        name: 'Freight Cost per KM/Tonnage',
+        value: `₹${freightCostPerKm}/km`,
+        target: '₹3.5/km',
         lowerIsBetter: true,
-        tileSize: '1x1'
+        tileSize: '2x1'
       },
       {
         id: 'tripCount',
@@ -268,55 +290,159 @@ export const generateRandomData = () => {
         value: carbonEmissions.toString(),
         target: '500',
         lowerIsBetter: true,
+        tileSize: '1x2'
+      },
+      {
+        id: 'otif',
+        name: 'On-Time In-Full (OTIF)',
+        value: `${otif}%`,
+        target: '90.0%',
+        lowerIsBetter: false,
+        tileSize: '1x1'
+      },
+      {
+        id: 'outboundFreightCost',
+        name: 'Outbound Freight Cost',
+        value: `${outboundFreightCost}%`,
+        target: '7.5%',
+        lowerIsBetter: true,
+        tileSize: '1x1'
+      },
+      {
+        id: 'inboundFreightCost',
+        name: 'Inbound Freight Cost',
+        value: `${inboundFreightCost}%`,
+        target: '5.5%',
+        lowerIsBetter: true,
+        tileSize: '1x1'
+      },
+      {
+        id: 'fuelEfficiency',
+        name: 'Fuel Efficiency',
+        value: `${fuelEfficiency} km/l`,
+        target: '4.0 km/l',
+        lowerIsBetter: false,
+        tileSize: '1x1'
+      },
+      {
+        id: 'vehicleUtilizationCXO',
+        name: 'Vehicle Utilization',
+        value: `${vehicleUtilizationCXO}%`,
+        target: '85.0%',
+        lowerIsBetter: false,
+        tileSize: '1x1'
+      },
+      {
+        id: 'salesDeliveryOrders',
+        name: 'Sales & Delivery Orders',
+        value: salesDeliveryOrders.toString(),
+        target: '900',
+        lowerIsBetter: false,
         tileSize: '1x1'
       }
     ],
     companyKpis: [
       {
         id: 'orderExecutionTime',
-        name: 'Order Execution Time',
+        name: 'Order Execution Time (OET)',
         value: `${orderExecutionTime} days`,
         target: '5.0 days',
         lowerIsBetter: true,
+        tileSize: '2x2'
+      },
+      {
+        id: 'vehicleWeightVolumeUtilization',
+        name: 'Vehicle, Weight, Volume Utilization',
+        value: `${vehicleUtilization}% / ${weightUtilization}% / ${volumeUtilization}%`,
+        target: '80.0% / 80.0% / 75.0%',
+        lowerIsBetter: false,
         tileSize: '2x1'
       },
       {
-        id: 'vehicleUtilization',
-        name: 'Vehicle Utilization',
-        value: `${vehicleUtilization}%`,
-        target: '80.0%',
-        lowerIsBetter: false,
-        tileSize: '1x1'
+        id: 'transitUnloadingTime',
+        name: 'Transit Time & Unloading Time',
+        value: `${transitTime} days / ${unloadingTurnaround} hrs`,
+        target: '3.0 days / 4.0 hrs',
+        lowerIsBetter: true,
+        tileSize: '1x2'
       },
       {
-        id: 'transitTime',
-        name: 'Transit Time',
-        value: `${transitTime} days`,
-        target: '3.0 days',
+        id: 'freightCostsPerUnit',
+        name: 'Freight Costs per KM/Tonnage/Unit',
+        value: `₹${freightCostsPerKm}/km | ₹${freightCostsPerTon}/ton`,
+        target: '₹3.5/km | ₹12.0/ton',
         lowerIsBetter: true,
-        tileSize: '1x1'
-      },
-      {
-        id: 'unloadingTurnaround',
-        name: 'Unloading Turnaround',
-        value: `${unloadingTurnaround} hrs`,
-        target: '4.0 hrs',
-        lowerIsBetter: true,
-        tileSize: '1x1'
-      },
-      {
-        id: 'freightCosts',
-        name: 'Freight Costs (Lakhs)',
-        value: `₹${freightCosts}L`,
-        target: '₹12.0L',
-        lowerIsBetter: true,
-        tileSize: '1x1'
+        tileSize: '2x1'
       },
       {
         id: 'weightVolumeMetrics',
         name: 'Weight/Volume Utilization',
         value: `${weightVolumeMetrics}%`,
         target: '85.0%',
+        lowerIsBetter: false,
+        tileSize: '1x1'
+      },
+      {
+        id: 'placementEfficiency',
+        name: 'Placement Efficiency',
+        value: `${companyPlacementEfficiency}%`,
+        target: '85.0%',
+        lowerIsBetter: false,
+        tileSize: '1x1'
+      },
+      {
+        id: 'cleanPODInvoices',
+        name: 'Clean POD & Invoices',
+        value: `${companyCleanPOD}%`,
+        target: '90.0%',
+        lowerIsBetter: false,
+        tileSize: '1x1'
+      },
+      {
+        id: 'costPercentSales',
+        name: 'Cost as % of Sales & Purchases',
+        value: `${costPercentSales}%`,
+        target: '10.0%',
+        lowerIsBetter: true,
+        tileSize: '1x1'
+      },
+      {
+        id: 'otherChargesBreakdown',
+        name: 'Other Charges Breakdown',
+        value: `₹${otherCharges}L`,
+        target: '₹3.0L',
+        lowerIsBetter: true,
+        tileSize: '1x1'
+      },
+      {
+        id: 'invoiceSettlement',
+        name: 'Invoice Cycle Analysis',
+        value: `${invoiceSettlement}%`,
+        target: '85.0%',
+        lowerIsBetter: false,
+        tileSize: '1x1'
+      },
+      {
+        id: 'materialInvoices',
+        name: 'Material Invoices',
+        value: materialInvoices.toString(),
+        target: '250',
+        lowerIsBetter: false,
+        tileSize: '1x1'
+      },
+      {
+        id: 'freightInvoices',
+        name: 'Freight Invoices',
+        value: freightInvoices.toString(),
+        target: '200',
+        lowerIsBetter: false,
+        tileSize: '1x1'
+      },
+      {
+        id: 'companyTripCount',
+        name: 'Trip Count (FTL/PTL)',
+        value: companyTripCount.toString(),
+        target: '400',
         lowerIsBetter: false,
         tileSize: '1x1'
       }
@@ -356,19 +482,27 @@ export const generateRandomData = () => {
       },
       {
         id: 'statusFlow',
-        name: 'Status Flow Compliance',
+        name: 'Status Flow (Indent to Gate Out)',
         value: `${statusFlow}%`,
         target: '90.0%',
         lowerIsBetter: false,
-        tileSize: '1x1'
+        tileSize: '2x2'
       },
       {
         id: 'realTimeTrips',
-        name: 'Real-Time Trip Updates',
+        name: 'Real-time FTL/PTL Trips',
         value: realTimeTrips.toString(),
         target: '90',
         lowerIsBetter: false,
-        tileSize: '1x1'
+        tileSize: '2x1'
+      },
+      {
+        id: 'branchVehicleUtilization',
+        name: 'Vehicle Utilization',
+        value: `${branchVehicleUtilization}%`,
+        target: '80.0%',
+        lowerIsBetter: false,
+        tileSize: '2x1'
       },
       {
         id: 'transitTimeMonitoring',
@@ -376,7 +510,7 @@ export const generateRandomData = () => {
         value: `${transitTimeMonitoring} hrs`,
         target: '2.5 hrs',
         lowerIsBetter: true,
-        tileSize: '1x1'
+        tileSize: '1x2'
       },
       {
         id: 'branchCleanPod',
@@ -391,6 +525,30 @@ export const generateRandomData = () => {
         name: 'Invoice Submission Rate',
         value: `${invoiceSubmission}%`,
         target: '95.0%',
+        lowerIsBetter: false,
+        tileSize: '1x1'
+      },
+      {
+        id: 'weightVolumeMetricsBranch',
+        name: 'Weight & Volume Metrics',
+        value: `${weightVolumeMetricsBranch}%`,
+        target: '85.0%',
+        lowerIsBetter: false,
+        tileSize: '1x1'
+      },
+      {
+        id: 'branchOrderExecutionTime',
+        name: 'Order Execution Time (OET)',
+        value: `${branchOrderExecutionTime} days`,
+        target: '5.0 days',
+        lowerIsBetter: true,
+        tileSize: '1x1'
+      },
+      {
+        id: 'materialFreightInvoices',
+        name: 'Material & Freight Invoices',
+        value: materialFreightInvoices.toString(),
+        target: '130',
         lowerIsBetter: false,
         tileSize: '1x1'
       }
