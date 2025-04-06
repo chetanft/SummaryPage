@@ -48,7 +48,7 @@ const SummaryPage = () => {
     <div className="summary-page">
       <header className="summary-header">
         <h1>Summary Page</h1>
-        <div className="header-controls">
+        <div className="header-right">
           <div className="persona-selector">
             <label htmlFor="persona">User Persona: </label>
             <select
@@ -61,10 +61,8 @@ const SummaryPage = () => {
               <option value="branch">Branch-Level</option>
             </select>
           </div>
-          <div className="header-right">
-            <RefreshIndicator />
-            <ThemeToggle />
-          </div>
+          <RefreshIndicator />
+          <ThemeToggle />
         </div>
       </header>
 
