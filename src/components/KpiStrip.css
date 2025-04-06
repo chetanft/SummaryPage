@@ -36,7 +36,7 @@
 /* KPI title styling */
 .kpi-title {
   margin: 0;
-  font-size: 1rem; /* 16px */
+  font-size: 0.875rem; /* 14px - reduced by 2px */
   font-weight: 600;
   color: var(--color-text-primary);
   white-space: nowrap;
@@ -57,7 +57,7 @@
 
 /* KPI value styling */
 .kpi-value {
-  font-size: 1.75rem; /* 28px */
+  font-size: 1.625rem; /* 26px - reduced by 2px */
   font-weight: 700;
   color: var(--color-text-secondary); /* Neutral color - will be overridden */
 }

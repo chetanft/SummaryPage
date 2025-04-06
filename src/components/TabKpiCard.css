@@ -26,7 +26,7 @@
 
 .tab-kpi-header h3 {
   margin: 0;
-  font-size: 1.125rem; /* 18px */
+  font-size: 1rem; /* 16px - reduced by 2px */
   font-weight: 600;
   color: var(--color-text-primary);
   line-height: 1.4;

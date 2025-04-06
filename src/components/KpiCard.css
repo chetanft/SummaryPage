@@ -146,6 +146,12 @@
   margin-bottom: 0.25rem;
 }
 
+.kpi-value-target-container {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+}
+
 .kpi-value {
   font-size: 2rem; /* 32px */
   font-weight: 700;
@@ -184,7 +190,6 @@
   display: flex;
   align-items: baseline;
   gap: 0.5rem;
-  margin-top: 0.25rem;
 }
 
 .kpi-target-label {

@@ -205,21 +205,60 @@ const KpiCard = ({ kpi, onClick }) => {
     };
 
     // Style the datasets
-    lineData.datasets = lineData.datasets.map(dataset => {
+    lineData.datasets = lineData.datasets.map((dataset, index) => {
       // Determine color based on KPI type
       let borderColor = '#003c9b'; // Default blue
       let backgroundColor = 'rgba(0, 60, 155, 0.1)';
 
-      // Use green for KPIs where higher is better and value is above target
-      if (!kpi.lowerIsBetter && isAboveTarget()) {
-        borderColor = '#04bc15'; // Green
-        backgroundColor = 'rgba(4, 188, 21, 0.1)';
+      // For Revenue and Profit Trend KPI, use different colors for each line
+      if (kpi.id === 'revenueProfitTrends') {
+        if (index === 0) { // Revenue line
+          borderColor = '#003c9b'; // Blue
+          backgroundColor = 'rgba(0, 60, 155, 0.1)';
+        } else if (index === 1) { // Profit line
+          borderColor = '#04bc15'; // Green
+          backgroundColor = 'rgba(4, 188, 21, 0.1)';
+        }
+      } else {
+        // Use green for KPIs where higher is better and value is above target
+        if (!kpi.lowerIsBetter && isAboveTarget()) {
+          borderColor = '#04bc15'; // Green
+          backgroundColor = 'rgba(4, 188, 21, 0.1)';
+        }
+        // Use red for KPIs where lower is better and value is above target
+        // or KPIs where higher is better and value is below target
+        else if ((kpi.lowerIsBetter && isAboveTarget()) || (!kpi.lowerIsBetter && isBelowTarget())) {
+          borderColor = '#ff4d4f'; // Red
+          backgroundColor = 'rgba(255, 77, 79, 0.1)';
+        }
       }
-      // Use red for KPIs where lower is better and value is above target
-      // or KPIs where higher is better and value is below target
-      else if ((kpi.lowerIsBetter && isAboveTarget()) || (!kpi.lowerIsBetter && isBelowTarget())) {
-        borderColor = '#ff4d4f'; // Red
-        backgroundColor = 'rgba(255, 77, 79, 0.1)';
+
+      // For conditional coloring based on target
+      if (targetValue && dataset.data) {
+        // Create segment styling for above/below target
+        const segmentColors = dataset.data.map((value, i) => {
+          if (kpi.lowerIsBetter) {
+            return value <= targetValue ? '#04bc15' : '#ff4d4f'; // Green if below target, red if above
+          } else {
+            return value >= targetValue ? '#04bc15' : '#ff4d4f'; // Green if above target, red if below
+          }
+        });
+
+        // If we have different segment colors, use them
+        if (segmentColors.some(color => color !== segmentColors[0])) {
+          return {
+            ...dataset,
+            borderColor: segmentColors,
+            backgroundColor: segmentColors.map(color =>
+              color === '#04bc15' ? 'rgba(4, 188, 21, 0.1)' : 'rgba(255, 77, 79, 0.1)'
+            ),
+            borderWidth: 3,
+            pointRadius: 2,
+            pointHoverRadius: 5,
+            tension: 0.2,
+            fill: true
+          };
+        }
       }
 
       return {
@@ -261,11 +300,19 @@ const KpiCard = ({ kpi, onClick }) => {
       </div>
       <div className="kpi-content">
         <div className="kpi-value-container">
-          <div
-            className="kpi-value"
-            style={{ color: getValueColor() }}
-          >
-            {value}
+          <div className="kpi-value-target-container">
+            <div
+              className="kpi-value"
+              style={{ color: getValueColor() }}
+            >
+              {value}
+            </div>
+            {target && (
+              <div className="kpi-target">
+                <span className="kpi-target-label">Target:</span>
+                <span className="kpi-target-value">{target}</span>
+              </div>
+            )}
           </div>
           {trend && (
             <div className={`kpi-trend ${trend}`}>
@@ -273,12 +320,6 @@ const KpiCard = ({ kpi, onClick }) => {
             </div>
           )}
         </div>
-        {target && (
-          <div className="kpi-target">
-            <span className="kpi-target-label">Target:</span>
-            <span className="kpi-target-value">{target}</span>
-          </div>
-        )}
       </div>
 
       <div className="kpi-chart" style={{

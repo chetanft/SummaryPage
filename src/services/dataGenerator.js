@@ -76,6 +76,59 @@ const generateSixMonthsTrendData = (current, min, max, isPercentage = false, tre
 
 // Generate chart data for a KPI
 const generateChartData = (kpi) => {
+  // Special case for Revenue & Profit Trends KPI
+  if (kpi.id === 'revenueProfitTrends') {
+    // Extract revenue and profit values
+    const valueParts = kpi.value.toString().split('/');
+    const revenuePart = valueParts[0].trim(); // "₹12.50Cr"
+    const profitPart = valueParts[1].trim(); // "₹2.50Cr"
+
+    // Extract target values
+    const targetParts = kpi.target.toString().split('/');
+    const revenueTarget = targetParts[0].trim(); // "₹15.0Cr"
+    const profitTarget = targetParts[1].trim(); // "₹2.5Cr"
+
+    // Extract numeric values
+    const revenueValue = parseFloat(revenuePart.replace(/[^0-9.-]+/g, ''));
+    const profitValue = parseFloat(profitPart.replace(/[^0-9.-]+/g, ''));
+    const revenueTargetValue = parseFloat(revenueTarget.replace(/[^0-9.-]+/g, ''));
+    const profitTargetValue = parseFloat(profitTarget.replace(/[^0-9.-]+/g, ''));
+
+    // Generate trend data for both revenue and profit
+    const revenueData = generateSixMonthsTrendData(revenueValue, 'up', 0.5, revenueValue * 0.7, revenueValue * 1.3, false);
+    const profitData = generateSixMonthsTrendData(profitValue, 'up', 0.3, profitValue * 0.6, profitValue * 1.4, false);
+
+    // Generate labels (last 6 months)
+    const labels = generateMonthLabels(6);
+
+    return {
+      labels: labels,
+      datasets: [
+        {
+          label: 'Revenue',
+          data: revenueData,
+          borderColor: '#003c9b', // Blue
+          backgroundColor: 'rgba(0, 60, 155, 0.1)',
+          borderWidth: 2,
+          pointRadius: 0,
+          tension: 0.4,
+          yAxisID: 'y'
+        },
+        {
+          label: 'Profit',
+          data: profitData,
+          borderColor: '#04bc15', // Green
+          backgroundColor: 'rgba(4, 188, 21, 0.1)',
+          borderWidth: 2,
+          pointRadius: 0,
+          tension: 0.4,
+          yAxisID: 'y'
+        }
+      ]
+    };
+  }
+
+  // For all other KPIs, use the standard approach
   // Extract the value for chart generation
   let valueStr = '';
   let targetStr = '';
