@@ -2,7 +2,16 @@ import React from 'react';
 import { Line } from 'react-chartjs-2';
 import './KpiStrip.css';
 
-const KpiStrip = ({ kpis }) => {
+// Define which KPIs should be shown in the strip (non-important KPIs)
+const stripKpiIds = {
+  cxo: ['otif', 'outboundFreightCost', 'inboundFreightCost', 'fuelEfficiency', 'vehicleUtilizationCXO', 'salesDeliveryOrders'],
+  company: ['placementEfficiency', 'cleanPODInvoices', 'costPercentSales', 'otherChargesBreakdown', 'invoiceSettlement', 'materialInvoices', 'freightInvoices', 'companyTripCount'],
+  branch: ['weightVolumeMetricsBranch', 'branchOrderExecutionTime', 'materialFreightInvoices']
+};
+
+const KpiStrip = ({ kpis, persona = 'cxo' }) => {
+  // Filter KPIs to only show the ones defined in stripKpiIds for the current persona
+  const filteredKpis = kpis.filter(kpi => stripKpiIds[persona]?.includes(kpi.id));
   // Function to determine if a value is above target
   const isAboveTarget = (kpi) => {
     if (!kpi.value || !kpi.target) return false;
@@ -147,7 +156,7 @@ const KpiStrip = ({ kpis }) => {
 
   return (
     <>
-      {kpis.map((kpi) => (
+      {filteredKpis.map((kpi) => (
         <div key={kpi.id} className={`kpi-strip-item ${getTargetComparisonClass(kpi)}`}>
           <div className="kpi-content">
             <h4 className="kpi-title">{kpi.name}</h4>

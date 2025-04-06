@@ -7,6 +7,13 @@ import BranchTabs from './BranchTabs';
 import RefreshIndicator from './RefreshIndicator';
 import { DataContext } from '../context/DataContext';
 
+// Define which KPIs should be shown in the main grid (important KPIs)
+const mainKpiIds = {
+  cxo: ['revenueProfitTrends', 'orderToDelivery', 'freightCostPerKm', 'tripCount', 'carbonEmissions'],
+  company: ['orderExecutionTime', 'vehicleWeightVolumeUtilization', 'transitUnloadingTime', 'freightCostsPerUnit', 'weightVolumeMetrics'],
+  branch: ['unloadingTime', 'cleanPOD', 'placementEfficiency', 'salesOrders', 'statusFlow', 'realTimeTrips', 'branchVehicleUtilization', 'transitTimeMonitoring', 'branchCleanPod', 'invoiceSubmission']
+};
+
 const SummaryPage = () => {
   const [selectedPersona, setSelectedPersona] = useState('cxo');
   const [drillDownOpen, setDrillDownOpen] = useState(false);
@@ -77,7 +84,9 @@ const SummaryPage = () => {
           {loading ? (
             <div className="loading-indicator">Loading data...</div>
           ) : (
-            data && data[`${selectedPersona}Kpis`] && data[`${selectedPersona}Kpis`].map(kpi => (
+            data && data[`${selectedPersona}Kpis`] && data[`${selectedPersona}Kpis`]
+              .filter(kpi => mainKpiIds[selectedPersona]?.includes(kpi.id))
+              .map(kpi => (
               <div key={kpi.id} className={`tile-${kpi.tileSize || '1x1'}`}>
                 <KpiCard
                   kpi={kpi}
@@ -93,7 +102,7 @@ const SummaryPage = () => {
           {loading ? (
             <div className="loading-indicator">Loading data...</div>
           ) : (
-            data && data[`${selectedPersona}Kpis`] && <KpiStrip kpis={data[`${selectedPersona}Kpis`]} />
+            data && data[`${selectedPersona}Kpis`] && <KpiStrip kpis={data[`${selectedPersona}Kpis`]} persona={selectedPersona} />
           )}
         </section>
       </main>
