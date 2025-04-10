@@ -137,7 +137,7 @@ const TabKpiCard = ({ kpi }) => {
               </div>
             </div>
             {calculateTrendPercentage() !== 0 && (
-              <div className="trend-indicator">
+              <div className="trend-indicator" style={{ color: getTrendColor() }}>
                 {isTrendPositive() ? <FaArrowUp /> : <FaArrowDown />}
                 <span className="trend-percentage">{formatTrendPercentage()}</span>
               </div>

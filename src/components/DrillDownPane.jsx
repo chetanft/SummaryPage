@@ -184,8 +184,8 @@ const DrillDownPane = ({ persona, kpi, onClose }) => {
         return `${rawValue.toFixed(1)}%`;
       }
       // Check if the original value has a currency symbol
-      else if (String(kpi.value).match(/^[\$₹€£¥]/)) {
-        const currencySymbol = String(kpi.value).match(/^[\$₹€£¥]/)[0];
+      else if (String(kpi.value).match(/^[$₹€£¥]/)) {
+        const currencySymbol = String(kpi.value).match(/^[$₹€£¥]/)[0];
         return `${currencySymbol}${rawValue.toFixed(0)}`;
       }
       // Check if the original value includes 'days'
